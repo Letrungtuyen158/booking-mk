@@ -14,11 +14,6 @@ import PartnersSection from "@/components/PartnersSection";
 import FinalHeroSection from "@/components/FinalHeroSection";
 import Footer from "@/components/Footer";
 
-export const metadata = {
-  title: "Booking MK - Professional Travel Tours",
-  description: "Book tours, explore Vietnam with Booking MK. Quality tours, best prices, trusted service.",
-};
-
 export default function HomePage() {
   return (
     <div className="min-h-screen">
