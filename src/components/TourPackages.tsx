@@ -218,8 +218,8 @@ const TourPackages = () => {
   const hasMoreTours = visibleTours < allTours.length;
 
   return (
-    <section className="py-8 bg-gray-50" ref={ref}>
-      <div className="container mx-auto px-4">
+    <section className="py-8 bg-white" ref={ref}>
+      <div className="container mx-auto px-20">
         {/* Header */}
         <motion.div
           className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8"
@@ -228,12 +228,9 @@ const TourPackages = () => {
           variants={fadeInUp}
         >
           <div>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+            <h2 className="text-xxs leading-tight font-semibold text-tour mb-2">
               {allTours.length} Tour Packages Found
             </h2>
-            <p className="text-lg text-gray-600">
-              Discover amazing destinations with our curated tour packages
-            </p>
           </div>
           <div className="flex items-center space-x-4 mt-4 lg:mt-0">
             <select className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[rgb(14,71,171)]">
@@ -248,7 +245,7 @@ const TourPackages = () => {
 
         {/* Tours Grid */}
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr"
+          className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 auto-rows-fr"
           initial="hidden"
           animate={isVisible ? "visible" : "hidden"}
           variants={{
@@ -284,14 +281,17 @@ const TourPackages = () => {
                       "https://images.unsplash.com/photo-1559827260-dc66d52bef19?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80";
                   }}
                 />
-                <div className="absolute top-4 left-4 bg-[rgb(255,200,0)] text-black px-3 py-1 rounded-full text-sm font-medium shadow-lg">
-                  {Math.round(
+                <div className="flex gap-1 absolute top-4 left-4 bg-[rgb(255,255,255,0.64)] text-tour px-[5px] py-[3px] rounded-sm text-xxs leading-tight font-semibold shadow-lg">
+                  <img src="/icons/location.svg" alt="location" />
+                  <span className="truncate">{tour.location}</span>
+
+                  {/* {Math.round(
                     ((parseFloat(tour.originalPrice.slice(1)) -
                       parseFloat(tour.price.slice(1))) /
                       parseFloat(tour.originalPrice.slice(1))) *
                       100,
                   )}
-                  % OFF
+                  % OFF */}
                 </div>
                 <div className="absolute top-4 right-4 bg-white bg-opacity-90 backdrop-blur-sm px-2 py-1 rounded-full flex items-center space-x-1 shadow-lg">
                   <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
@@ -302,7 +302,6 @@ const TourPackages = () => {
               <div className="p-6 flex flex-col flex-grow">
                 <div className="flex items-center text-sm text-gray-500 mb-2">
                   <MapPin className="w-4 h-4 mr-1 flex-shrink-0" />
-                  <span className="truncate">{tour.location}</span>
                   <span className="mx-2">•</span>
                   <Clock className="w-4 h-4 mr-1 flex-shrink-0" />
                   <span className="truncate">{tour.duration}</span>

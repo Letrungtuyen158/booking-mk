@@ -8,29 +8,29 @@ import {
 
 const categories = [
   {
-    title: "Dining & Street Food",
-    image:
-      "https://images.unsplash.com/photo-1559715541-5daf8a0296d0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+    title: "Cruise & Boat tours",
+    image: "/icons/cruise-boat-tours.svg",
+    desc: "12 destinations",
   },
   {
-    title: "Cultural Heritage Sites",
-    image:
-      "https://images.unsplash.com/photo-1555400081-2d1a8c8ba491?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+    title: "Explore Floating Market",
+    image: "/icons/explore-floating-market.svg",
+    desc: "12 destinations",
   },
   {
     title: "Nature & Adventure",
-    image:
-      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+    image: "/icons/nature-adventure.svg",
+    desc: "12 destinations",
   },
   {
-    title: "Cruise Tours",
-    image:
-      "https://images.unsplash.com/photo-1560299589-5b316fe6be9e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+    title: "Private Tours",
+    image: "/icons/private-tours.svg",
+    desc: "12 destinations",
   },
   {
-    title: "Multi-day Trips",
-    image:
-      "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+    title: "Multiday trips",
+    image: "/icons/multiday-trips.svg",
+    desc: "12 destinations",
   },
 ];
 
@@ -41,21 +41,7 @@ const TourCategories = () => {
     <section className="py-16 bg-white" ref={ref}>
       <div className="container mx-auto px-4">
         <motion.div
-          className="text-center mb-12"
-          initial="hidden"
-          animate={isVisible ? "visible" : "hidden"}
-          variants={fadeInUp}
-        >
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Explore Tour Categories
-          </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Discover the diverse experiences Vietnam has to offer
-          </p>
-        </motion.div>
-
-        <motion.div
-          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6 justify-items-center"
+          className="flex flex-wrap gap-6 justify-center"
           initial="hidden"
           animate={isVisible ? "visible" : "hidden"}
           variants={staggerContainer}
@@ -76,39 +62,41 @@ const TourCategories = () => {
                   },
                 },
               }}
-              whileHover={{
-                y: -8,
-                transition: { duration: 0.3 },
-              }}
-              className="flex justify-center"
+              // whileHover={{
+              //   y: -8,
+              //   transition: { duration: 0.3 },
+              // }}
+              className="w-32 md:w-40 lg:w-[200px] border-0 group"
             >
-              <Card className="group cursor-pointer hover:shadow-xl transition-all duration-300 w-full max-w-[180px]">
-                <CardContent className="p-4 md:p-6 text-center">
-                  <div className="relative mb-3 md:mb-4">
-                    <motion.div
-                      className="w-20 h-20 md:w-28 md:h-28 lg:w-32 lg:h-32 mx-auto rounded-full overflow-hidden border-3 md:border-4 border-[rgb(255,200,0)] group-hover:border-[rgb(14,71,171)] transition-colors shadow-lg"
-                      whileHover={{ scale: 1.05 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <img
-                        src={category.image}
-                        alt={category.title}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                        loading="lazy"
-                        onError={(e) => {
-                          const target = e.target as HTMLImageElement;
-                          target.onerror = null;
-                          target.src =
-                            "https://images.unsplash.com/photo-1559827260-dc66d52bef19?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80";
-                        }}
-                      />
-                    </motion.div>
-                  </div>
-                  <h3 className="text-sm md:text-base lg:text-lg font-semibold text-gray-900 group-hover:text-[rgb(14,71,171)] transition-colors leading-tight">
+              <div className="text-center flex flex-col gap-[22px]">
+                <div className="h-24 md:h-32 lg:h-[160px] relative flex justify-center items-center rounded-[8px] overflow-hidden cursor-pointer">
+                  <img
+                    src={category.image}
+                    alt={category.title}
+                    className="text-center w-[60px] h-[60px] md:w-[70px] md:h-[70px] lg:w-[80px] lg:h-[80px] object-cover transition-all duration-300 group-hover:opacity-0"
+                    loading="lazy"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.onerror = null;
+                      target.src =
+                        "https://images.unsplash.com/photo-1559827260-dc66d52bef19?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80";
+                    }}
+                  />
+                  <img
+                    src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+                    alt=""
+                    className="absolute text-center w-full h-[160px] object-cover opacity-0 transition-all duration-300 group-hover:opacity-100"
+                  />
+                </div>
+                <div>
+                  <h3 className="text-xs md:text-sm font-bold text-gray-900 leading-tight">
                     {category.title}
                   </h3>
-                </CardContent>
-              </Card>
+                  <p className="text-xs text-gray-500 leading-tight">
+                    {category.desc}
+                  </p>
+                </div>
+              </div>
             </motion.div>
           ))}
         </motion.div>
