@@ -177,47 +177,15 @@ const allGalleryPhotos = [
   },
 ];
 
-const PhotoGallerySection = () => {
+const TravelGallery = () => {
   const { ref, isVisible } = useScrollAnimation();
-  const [selectedCategory, setSelectedCategory] = useState("All");
-  const [visiblePhotos, setVisiblePhotos] = useState(12);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const categories = ["All", "Nature", "Culture", "Food", "Landscape"];
-
-  const filteredPhotos =
-    selectedCategory === "All"
-      ? allGalleryPhotos
-      : allGalleryPhotos.filter((photo) => photo.category === selectedCategory);
-
-  const displayedPhotos = filteredPhotos.slice(0, visiblePhotos);
-  const hasMorePhotos = visiblePhotos < filteredPhotos.length;
-
-  const handleLoadMore = async () => {
-    console.log("Load More Photos clicked!", {
-      visiblePhotos,
-      totalPhotos: filteredPhotos.length,
-    });
-    setIsLoading(true);
-
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 800));
-
-    setVisiblePhotos((prev) => {
-      const newCount = Math.min(prev + 12, filteredPhotos.length);
-      console.log("New visible photos:", newCount);
-      return newCount;
-    });
-    setIsLoading(false);
-  };
-
-  const handleCategoryChange = (category: string) => {
-    setSelectedCategory(category);
-    setVisiblePhotos(12); // Reset to initial count when changing category
-  };
+  const displayedPhotos = allGalleryPhotos.slice(0, 7);
 
   return (
-    <section className="py-16 bg-white" ref={ref}>
+    <section
+      className="py-16 bg-[url('/images/home/travel-gallery-bg.png')] bg-cover bg-center"
+      ref={ref}
+    >
       <div className="container mx-auto px-4 max-w-[1240px]">
         <motion.div
           className="text-center mb-12"
@@ -225,36 +193,17 @@ const PhotoGallerySection = () => {
           animate={isVisible ? "visible" : "hidden"}
           variants={fadeInUp}
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Life on Tour
+          <span className="text-[#0E47AB] text-sm tracking-[20%] w-fit">
+            TESTIMONIALS
+          </span>
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            Perfect Travel Gallery{" "}
           </h2>
-        </motion.div>
-
-        {/* Category Filter */}
-        <motion.div
-          className="flex flex-wrap justify-center gap-4 mb-8"
-          initial="hidden"
-          animate={isVisible ? "visible" : "hidden"}
-          variants={fadeInUp}
-        >
-          {categories.map((category) => (
-            <button
-              key={category}
-              onClick={() => handleCategoryChange(category)}
-              className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-                selectedCategory === category
-                  ? "bg-[rgb(14,71,171)] text-white shadow-lg"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-              }`}
-            >
-              {category}
-            </button>
-          ))}
         </motion.div>
 
         {/* Photo Grid */}
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 items-center"
           initial="hidden"
           animate={isVisible ? "visible" : "hidden"}
           variants={{
@@ -311,31 +260,9 @@ const PhotoGallerySection = () => {
             </motion.div>
           ))}
         </motion.div>
-
-        {/* Load More Button */}
-        {hasMorePhotos && (
-          <motion.div
-            className="text-center mt-12"
-            initial="hidden"
-            animate={isVisible ? "visible" : "hidden"}
-            variants={fadeInUp}
-          >
-            <button
-              onClick={handleLoadMore}
-              disabled={isLoading}
-              className="bg-[rgb(14,71,171)] text-white px-8 py-3 rounded-lg font-medium hover:bg-[rgb(14,71,171)]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isLoading ? "Loading..." : "Load More Photos"}
-            </button>
-            <p className="text-sm text-gray-500 mt-2">
-              Showing {displayedPhotos.length} of {filteredPhotos.length}{" "}
-              {selectedCategory === "All" ? "" : selectedCategory} photos
-            </p>
-          </motion.div>
-        )}
       </div>
     </section>
   );
 };
 
-export default PhotoGallerySection;
+export default TravelGallery;

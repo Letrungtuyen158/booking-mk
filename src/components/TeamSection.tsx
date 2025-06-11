@@ -58,6 +58,16 @@ const teamMembers = [
     speciality: "Halong Bay Cruises",
     languages: ["Vietnamese", "English", "Chinese"],
   },
+  {
+    id: 6,
+    name: "Tran Van Duc",
+    role: "Cruise Director",
+    image:
+      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=387&q=80",
+    experience: "12+ years",
+    speciality: "Halong Bay Cruises",
+    languages: ["Vietnamese", "English", "Chinese"],
+  },
 ];
 
 const TeamSection = () => {
@@ -72,10 +82,10 @@ const TeamSection = () => {
           animate={isVisible ? "visible" : "hidden"}
           variants={fadeInUp}
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-[#0E47AB] mb-4">
             Meet the Team
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-base text-gray-600 max-w-[840px] mx-auto">
             We're a passionate local team — guides, crew, and hosts — dedicated
             to making your Halong Bay journey safe, smooth, and unforgettable.
             We know the bay by heart and love sharing it with you.
@@ -83,7 +93,7 @@ const TeamSection = () => {
         </motion.div>
 
         <motion.div
-          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6 justify-items-center"
+          className="flex flex-wrap gap-4 md:gap-6 xl:gap-10 justify-center"
           initial="hidden"
           animate={isVisible ? "visible" : "hidden"}
           variants={staggerContainer}
@@ -110,11 +120,11 @@ const TeamSection = () => {
               }}
               className="flex justify-center"
             >
-              <Card className="group cursor-pointer hover:shadow-xl transition-all duration-300 w-full max-w-[180px]">
-                <CardContent className="p-4 md:p-6 text-center">
-                  <div className="relative mb-3 md:mb-4">
+              <div className="group cursor-pointer duration-300 w-[143px]">
+                <div className="text-center">
+                  <div className="relative mb-3">
                     <motion.div
-                      className="w-20 h-20 md:w-28 md:h-28 lg:w-32 lg:h-32 mx-auto rounded-full overflow-hidden border-3 md:border-4 border-[rgb(255,200,0)] group-hover:border-[rgb(14,71,171)] transition-colors shadow-lg"
+                      className="w-20 h-20 mx-auto rounded-full overflow-hidden transition-colors shadow-lg"
                       whileHover={{ scale: 1.05 }}
                       transition={{ duration: 0.3 }}
                     >
@@ -132,11 +142,12 @@ const TeamSection = () => {
                       />
                     </motion.div>
                   </div>
-                  <h3 className="text-sm md:text-base lg:text-lg font-semibold text-gray-900 group-hover:text-[rgb(14,71,171)] transition-colors leading-tight">
+                  <h3 className="text-sm md:text-base font-semibold text-gray-900 leading-tight">
                     {category.name}
                   </h3>
-                </CardContent>
-              </Card>
+                  <span className="text-gray-500 text-xs">Tourism Coordinator</span>
+                </div>
+              </div>
             </motion.div>
           ))}
         </motion.div>

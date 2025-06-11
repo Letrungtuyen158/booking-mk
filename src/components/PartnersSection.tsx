@@ -28,14 +28,11 @@ const partners = [
 const PartnersSection = () => {
   return (
     <section className="py-8 bg-white">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 max-w-[1240px]">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
             Our Partners
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Trusted by leading travel platforms worldwide
-          </p>
         </div>
 
         {/* Partners Grid */}

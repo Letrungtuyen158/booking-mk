@@ -17,7 +17,7 @@ module.exports = {
             },
         },
         extend: {
-            fontSize: { xxs: "10.8px" },
+            fontSize: { xxs: ["10.8px", "12.96px"] },
             fontFamily: {
                 poppins: ["var(--font-poppins)"],
             },

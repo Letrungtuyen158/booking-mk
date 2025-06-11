@@ -2,9 +2,20 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Star, Clock, MapPin, Users, Calendar } from "lucide-react";
+import {
+  Star,
+  Clock,
+  MapPin,
+  Users,
+  Calendar,
+  Tag,
+  CircleCheck,
+} from "lucide-react";
 import Link from "next/link";
 import { useScrollAnimation, fadeInUp } from "@/hooks/use-scroll-animation";
+import { Badge } from "./ui/badge";
+import { Separator } from "./ui/separator";
+import { DashedSeparator } from "./ui/dashed-separator";
 
 // Extended tour data with 12 tours
 const allTours = [
@@ -18,7 +29,7 @@ const allTours = [
     rating: 4.9,
     reviews: 128,
     duration: "3 Days",
-    groupSize: "2-8 people",
+    groupSize: "3 - 5",
     location: "Ha Giang",
     highlights: ["Ma Pi Leng Pass", "Dong Van Karst Plateau", "Local Homestay"],
     departure: "Daily",
@@ -33,7 +44,7 @@ const allTours = [
     rating: 4.8,
     reviews: 95,
     duration: "2 Days",
-    groupSize: "4-12 people",
+    groupSize: "4 - 12",
     location: "Sapa",
     highlights: ["Rice Terraces", "Hill Tribe Villages", "Mountain Views"],
     departure: "Daily",
@@ -48,7 +59,7 @@ const allTours = [
     rating: 4.9,
     reviews: 203,
     duration: "2 Days",
-    groupSize: "2-20 people",
+    groupSize: "2 - 20",
     location: "Halong Bay",
     highlights: ["Limestone Caves", "Kayaking", "Sunset Dinner"],
     departure: "Daily",
@@ -63,7 +74,7 @@ const allTours = [
     rating: 4.7,
     reviews: 156,
     duration: "1 Day",
-    groupSize: "6-15 people",
+    groupSize: "6 - 15",
     location: "Can Tho",
     highlights: ["Floating Markets", "Fruit Gardens", "Local Cuisine"],
     departure: "Daily",
@@ -78,7 +89,7 @@ const allTours = [
     rating: 4.8,
     reviews: 89,
     duration: "4 Hours",
-    groupSize: "4-10 people",
+    groupSize: "4 - 10",
     location: "Hanoi",
     highlights: ["Pho Bo", "Banh Mi", "Local Markets"],
     departure: "Daily",
@@ -93,7 +104,7 @@ const allTours = [
     rating: 4.9,
     reviews: 167,
     duration: "3 Days",
-    groupSize: "2-8 people",
+    groupSize: "2 - 8",
     location: "Phong Nha",
     highlights: ["Son Tra Cave", "Underground Rivers", "Jungle Trekking"],
     departure: "Mon, Wed, Fri",
@@ -109,7 +120,7 @@ const allTours = [
     rating: 4.8,
     reviews: 142,
     duration: "2 Days",
-    groupSize: "4-12 people",
+    groupSize: "4 - 12",
     location: "Hoi An",
     highlights: ["Ancient Architecture", "Lantern Festival", "Cooking Class"],
     departure: "Daily",
@@ -124,7 +135,7 @@ const allTours = [
     rating: 4.7,
     reviews: 198,
     duration: "3 Days",
-    groupSize: "2-15 people",
+    groupSize: "2 - 15",
     location: "Da Nang",
     highlights: ["Golden Bridge", "Cable Car", "Beach Resort"],
     departure: "Daily",
@@ -139,7 +150,7 @@ const allTours = [
     rating: 4.6,
     reviews: 221,
     duration: "6 Hours",
-    groupSize: "8-20 people",
+    groupSize: "8 - 20",
     location: "Ho Chi Minh",
     highlights: ["Underground Tunnels", "War History", "Shooting Range"],
     departure: "Daily",
@@ -154,7 +165,7 @@ const allTours = [
     rating: 4.8,
     reviews: 134,
     duration: "1 Day",
-    groupSize: "4-12 people",
+    groupSize: "4 - 12",
     location: "Ninh Binh",
     highlights: ["River Boat Ride", "Limestone Cliffs", "Ancient Temples"],
     departure: "Daily",
@@ -169,7 +180,7 @@ const allTours = [
     rating: 4.9,
     reviews: 156,
     duration: "4 Days",
-    groupSize: "2-10 people",
+    groupSize: "2 - 10",
     location: "Phu Quoc",
     highlights: ["Pristine Beaches", "Cable Car", "Night Markets"],
     departure: "Daily",
@@ -184,7 +195,7 @@ const allTours = [
     rating: 4.7,
     reviews: 178,
     duration: "2 Days",
-    groupSize: "6-14 people",
+    groupSize: "6 - 14",
     location: "Dalat",
     highlights: ["Coffee Plantations", "Waterfalls", "French Architecture"],
     departure: "Daily",
@@ -219,7 +230,7 @@ const TourPackages = () => {
 
   return (
     <section className="py-8 bg-white" ref={ref}>
-      <div className="container mx-auto px-20">
+      <div className="container mx-auto px-4 md:px-10 xl:px-20">
         {/* Header */}
         <motion.div
           className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8"
@@ -228,7 +239,7 @@ const TourPackages = () => {
           variants={fadeInUp}
         >
           <div>
-            <h2 className="text-xxs leading-tight font-semibold text-tour mb-2">
+            <h2 className="text-xxs font-semibold text-tour mb-2">
               {allTours.length} Tour Packages Found
             </h2>
           </div>
@@ -281,83 +292,73 @@ const TourPackages = () => {
                       "https://images.unsplash.com/photo-1559827260-dc66d52bef19?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80";
                   }}
                 />
-                <div className="flex gap-1 absolute top-4 left-4 bg-[rgb(255,255,255,0.64)] text-tour px-[5px] py-[3px] rounded-sm text-xxs leading-tight font-semibold shadow-lg">
+                <div className="flex gap-1 absolute top-4 left-4 bg-[rgb(255,255,255,0.64)] text-tour px-[5px] py-[3px] rounded-sm text-xxs font-semibold shadow-lg">
                   <img src="/icons/location.svg" alt="location" />
                   <span className="truncate">{tour.location}</span>
-
-                  {/* {Math.round(
-                    ((parseFloat(tour.originalPrice.slice(1)) -
-                      parseFloat(tour.price.slice(1))) /
-                      parseFloat(tour.originalPrice.slice(1))) *
-                      100,
-                  )}
-                  % OFF */}
-                </div>
-                <div className="absolute top-4 right-4 bg-white bg-opacity-90 backdrop-blur-sm px-2 py-1 rounded-full flex items-center space-x-1 shadow-lg">
-                  <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                  <span className="text-sm font-medium">{tour.rating}</span>
                 </div>
               </div>
 
-              <div className="p-6 flex flex-col flex-grow">
-                <div className="flex items-center text-sm text-gray-500 mb-2">
-                  <MapPin className="w-4 h-4 mr-1 flex-shrink-0" />
-                  <span className="mx-2">•</span>
-                  <Clock className="w-4 h-4 mr-1 flex-shrink-0" />
-                  <span className="truncate">{tour.duration}</span>
+              <div className="p-4 flex flex-col flex-grow">
+                <div className="gap-[6px] flex items-center text-sm text-gray-500 mb-2">
+                  <Tag className="w-4 h-4 mr-1 flex-shrink-0" />
+                  <span className="line-clamp-1 pt-[2px] px-[6px] text-tour text-[8px] bg-[#F2F2F2] rounded-sm">
+                    Top rated
+                  </span>
+                  <span className="line-clamp-1 pt-[2px] px-[6px] text-tour text-[8px] bg-[#F2F2F2] rounded-sm">
+                    Booked 10 times yesterday
+                  </span>
+                  {/* <span className="truncate">{tour.duration}</span> */}
                 </div>
 
-                <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-[rgb(14,71,171)] transition-colors line-clamp-2 min-h-[3.5rem]">
+                <h3 className="text-[12px] font-bold text-gray-900  group-hover:text-[#FFD600] transition-colors line-clamp-2">
                   {tour.title}
                 </h3>
+                <DashedSeparator className="my-3" />
+                <div className="grid grid-cols-2 gap-[6px]">
+                  <div className="flex items-baseline gap-1 text-[#8E8E8E]">
+                    <CircleCheck className="size-[9.75px]" />
+                    <span className="text-[10px] ">3 Days - 3 Nights</span>
+                  </div>
+                  <div className="flex items-baseline gap-1 text-[#8E8E8E]">
+                    <CircleCheck className="size-[9.75px]" />
+                    <span className="text-[10px] ">Army Open-air Jeep</span>
+                  </div>
+                  <div className="flex items-baseline gap-1 text-[#8E8E8E]">
+                    <CircleCheck className="size-[9.75px]" />
+                    <span className="text-[10px] ">
+                      {tour.groupSize} pax maximum
+                    </span>
+                  </div>
+                  <div className="flex items-baseline gap-1 text-[#8E8E8E]">
+                    <CircleCheck className="size-[9.75px]" />
+                    <span className="text-[10px] ">Pick up available</span>
+                  </div>
+                </div>
 
-                <div className="space-y-2 mb-4 flex-grow">
-                  {tour.highlights.slice(0, 3).map((highlight, idx) => (
-                    <div
-                      key={idx}
-                      className="flex items-start text-sm text-gray-600"
-                    >
-                      <div className="w-2 h-2 bg-[rgb(14,71,171)] rounded-full mr-2 mt-2 flex-shrink-0"></div>
-                      <span className="line-clamp-1">{highlight}</span>
+                <DashedSeparator className="my-3" />
+
+                <div className="flex items-end justify-between gap-4">
+                  <div>
+                    <div className="text-xs text-[#8E8E8E] leading-tight">
+                      From{" "}
+                      <span className="line-through font-medium">$540</span>
                     </div>
-                  ))}
+                    <div className="flex items-end gap-1">
+                      <span className="text-2xl font-bold text-[#0E47AB] group-hover:text-[#FFD600]">
+                        $330
+                      </span>
+                      <span className="text-xs text-[#8E8E8E] font-medium mb-2">
+                        per person
+                      </span>
+                    </div>
+                  </div>
+                  <Link
+                    href={`/tour/${tour.id}`}
+                    className="bg-[#FFD600] group-hover:bg-[#0E47AB] text-white font-bold text-xxs leading-tight rounded-sm px-2 py-2 transition-colors"
+                  >
+                    Book now
+                  </Link>
                 </div>
-
-                <div className="flex items-center justify-between mb-4 text-sm">
-                  <div className="flex items-center space-x-1">
-                    <Users className="w-4 h-4 text-gray-400" />
-                    <span className="text-gray-600 truncate">
-                      {tour.groupSize}
-                    </span>
-                  </div>
-                  <div className="flex items-center space-x-1">
-                    <Calendar className="w-4 h-4 text-gray-400" />
-                    <span className="text-gray-600 truncate">
-                      {tour.departure}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center space-x-2">
-                    <span className="text-2xl font-bold text-[rgb(14,71,171)]">
-                      {tour.price}
-                    </span>
-                    <span className="text-lg text-gray-500 line-through">
-                      {tour.originalPrice}
-                    </span>
-                  </div>
-                  <div className="text-sm text-gray-500">
-                    ({tour.reviews} reviews)
-                  </div>
-                </div>
-
-                <Link
-                  href={`/tour/${tour.id}`}
-                  className="block w-full mt-auto bg-[rgb(14,71,171)] text-white text-center py-3 rounded-lg font-medium hover:bg-[rgb(14,71,171)]/90 transition-colors"
-                >
-                  View Details
-                </Link>
               </div>
             </motion.div>
           ))}
@@ -366,21 +367,20 @@ const TourPackages = () => {
         {/* Load More Button */}
         {hasMoreTours && (
           <motion.div
-            className="text-center mt-12"
+            className="text-center"
             initial="hidden"
             animate={isVisible ? "visible" : "hidden"}
             variants={fadeInUp}
           >
-            <button
-              onClick={handleLoadMore}
-              disabled={isLoading}
-              className="bg-[rgb(14,71,171)] text-white px-8 py-3 rounded-lg font-medium hover:bg-[rgb(14,71,171)]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isLoading ? "Loading..." : "Load More Tours"}
-            </button>
-            <p className="text-sm text-gray-500 mt-2">
-              Showing {displayedTours.length} of {allTours.length} tours
-            </p>
+            <DashedSeparator className="mt-12">
+              <button
+                onClick={handleLoadMore}
+                disabled={isLoading}
+                className="mx-6 text-sm bg-[rgb(14,71,171)] text-white px-4 py-2 rounded-md font-medium hover:bg-[rgb(14,71,171)]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isLoading ? "Loading..." : "Show more"}
+              </button>
+            </DashedSeparator>
           </motion.div>
         )}
       </div>

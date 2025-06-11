@@ -38,13 +38,10 @@ const FeaturesSection = () => {
   const { ref, isVisible } = useScrollAnimation();
 
   return (
-    <section
-      className=" py-4 md:py-8 bg-[oklch(0.985_0.002_247.839)]"
-      ref={ref}
-    >
+    <section className=" py-4 md:py-8" ref={ref}>
       <div className="container mx-auto px-4">
         <motion.div
-          className="relative max-w-6xl mx-auto"
+          className="relative max-w-[1440px] mx-auto"
           initial="hidden"
           animate={isVisible ? "visible" : "hidden"}
           variants={fadeInUp}
