@@ -11,26 +11,31 @@ const categories = [
     title: "Cruise & Boat tours",
     image: "/icons/cruise-boat-tours.svg",
     desc: "12 destinations",
+    maskImage: "/images/hero/image1.png",
   },
   {
     title: "Explore Floating Market",
     image: "/icons/explore-floating-market.svg",
     desc: "12 destinations",
+    maskImage: "/images/hero/image2.png",
   },
   {
     title: "Nature & Adventure",
     image: "/icons/nature-adventure.svg",
     desc: "12 destinations",
+    maskImage: "/images/hero/image3.png",
   },
   {
     title: "Private Tours",
     image: "/icons/private-tours.svg",
     desc: "12 destinations",
+    maskImage: "/images/hero/image4.png",
   },
   {
     title: "Multiday trips",
     image: "/icons/multiday-trips.svg",
     desc: "12 destinations",
+    maskImage: "/images/hero/image5.png",
   },
 ];
 
@@ -83,8 +88,8 @@ const TourCategories = () => {
                     }}
                   />
                   <img
-                    src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
-                    alt=""
+                    src={category.maskImage}
+                    alt={category.title}
                     className="absolute text-center w-full h-[160px] object-cover opacity-0 transition-all duration-300 group-hover:opacity-100"
                   />
                 </div>

@@ -222,6 +222,7 @@ const TestimonialsSection = () => {
                   >
                     {testimonial.tripImages.slice(0, 4).map((image, index) => (
                       <img
+                        key={index}
                         src={image}
                         alt={testimonial.tour}
                         className="w-[70px] h-[70px] rounded-sm object-cover"

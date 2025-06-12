@@ -80,14 +80,14 @@ const HeroSection = () => {
 
   return (
     <section
-      className="relative h-[70vh] min-h-[500px] flex items-center justify-center overflow-hidden"
+      className="relative min-h-[500px] max-h-[590px] flex items-center justify-center overflow-hidden"
       onMouseEnter={() => setIsAutoPlaying(false)}
       onMouseLeave={() => setIsAutoPlaying(true)}
     >
       <AnimatePresence mode="wait">
         <motion.div
           key={currentSlide}
-          initial={{ opacity: 0 }}
+          initial={{ opacity: 1 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 1 }}
@@ -98,17 +98,30 @@ const HeroSection = () => {
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
             style={{
               backgroundImage: `url('${heroSlides[currentSlide].image}')`,
+              // maskSize: "100%",
+              // maskPosition: "bottom -110%",
+              // filter: "saturate(100%)",
             }}
             initial={{ scale: 1.1 }}
             animate={{ scale: 1 }}
             transition={{ duration: 8, ease: "easeOut" }}
-          />
+          >
+            <div className="absolute bottom-[-50%] z-10 inset-0">
+              <img
+                alt="Cloud"
+                loading="lazy"
+                decoding="async"
+                className="object-cover w-full h-full"
+                src="/images/hero/cloud.webp.png"
+              />
+            </div>
+          </motion.div>
 
           {/* Dark Overlay */}
-          <div className="absolute inset-0 bg-black/40" />
+          {/* <div className="absolute inset-0 bg-black/40" /> */}
 
           {/* Cloud Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-white/20" />
+          {/* <div className="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-white/20" /> */}
         </motion.div>
       </AnimatePresence>
 
