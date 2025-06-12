@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
+import { motion, useAnimation } from "framer-motion";
 import { useScrollAnimation, fadeInUp } from "@/hooks/use-scroll-animation";
 
 // Extended gallery photos with more items
@@ -181,9 +181,10 @@ const PhotoGallerySection = () => {
   const { ref, isVisible } = useScrollAnimation();
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [visiblePhotos, setVisiblePhotos] = useState(12);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const categories = ["All", "Nature", "Culture", "Food", "Landscape"];
+  const [selectedPhoto, setSelectedPhoto] = useState<number | null>(null);
+  const galleryRef = useRef<HTMLDivElement>(null);
+  const controls = useAnimation();
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const filteredPhotos =
     selectedCategory === "All"
@@ -191,70 +192,108 @@ const PhotoGallerySection = () => {
       : allGalleryPhotos.filter((photo) => photo.category === selectedCategory);
 
   const displayedPhotos = filteredPhotos.slice(0, visiblePhotos);
-  const hasMorePhotos = visiblePhotos < filteredPhotos.length;
 
-  const handleLoadMore = async () => {
-    console.log("Load More Photos clicked!", {
-      visiblePhotos,
-      totalPhotos: filteredPhotos.length,
-    });
-    setIsLoading(true);
+  // Function to scroll to selected photo
+  const scrollToSelectedPhoto = (index: number) => {
+    if (galleryRef.current) {
+      const container = galleryRef.current;
+      const photoWidth = 275;
+      const gap = 16;
+      const containerWidth = container.clientWidth;
+      let scrollPosition: number;
 
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 800));
+      // Handle first photo
+      if (index === 0) {
+        scrollPosition = 0;
+      }
+      // Handle last photo
+      else if (index === displayedPhotos.length - 1) {
+        const maxScroll = container.scrollWidth - containerWidth;
+        scrollPosition = maxScroll;
+      }
+      // Handle middle photos
+      else {
+        scrollPosition =
+          (photoWidth + gap) * index - containerWidth / 2 + photoWidth / 2;
+      }
 
-    setVisiblePhotos((prev) => {
-      const newCount = Math.min(prev + 12, filteredPhotos.length);
-      console.log("New visible photos:", newCount);
-      return newCount;
-    });
-    setIsLoading(false);
+      container.scrollTo({
+        left: scrollPosition,
+        behavior: "smooth",
+      });
+    }
   };
 
-  const handleCategoryChange = (category: string) => {
-    setSelectedCategory(category);
-    setVisiblePhotos(12); // Reset to initial count when changing category
+  // Function to start auto play
+  const startAutoPlay = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+
+    intervalRef.current = setInterval(() => {
+      setSelectedPhoto((prev) => {
+        const nextIndex =
+          prev === null || prev >= displayedPhotos.length - 1 ? 0 : prev + 1;
+        scrollToSelectedPhoto(nextIndex);
+        return nextIndex;
+      });
+    }, 2000);
   };
+
+  // Function to stop auto play
+  const stopAutoPlay = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  };
+
+  // Initial auto play setup
+  useEffect(() => {
+    if (!selectedPhoto) {
+      startAutoPlay();
+    }
+
+    return () => {
+      stopAutoPlay();
+    };
+  }, [displayedPhotos.length]);
+
+  // Scroll to selected photo when it changes
+  useEffect(() => {
+    if (selectedPhoto !== null) {
+      scrollToSelectedPhoto(selectedPhoto);
+    }
+  }, [selectedPhoto]);
 
   return (
     <section className="py-16 bg-white" ref={ref}>
-      <div className="container mx-auto px-4 max-w-[1240px]">
+      <div
+        className="container py-24 mx-auto px-4 max-w-[1240px]"
+        style={{
+          backgroundImage: "url('/images/home/life-on-tour-bg.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
         <motion.div
           className="text-center mb-12"
           initial="hidden"
           animate={isVisible ? "visible" : "hidden"}
           variants={fadeInUp}
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <span className="text-[#0E47AB] text-sm tracking-[20%] w-fit">
+            PHOTOS
+          </span>
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">
             Life on Tour
           </h2>
         </motion.div>
 
-        {/* Category Filter */}
-        <motion.div
-          className="flex flex-wrap justify-center gap-4 mb-8"
-          initial="hidden"
-          animate={isVisible ? "visible" : "hidden"}
-          variants={fadeInUp}
-        >
-          {categories.map((category) => (
-            <button
-              key={category}
-              onClick={() => handleCategoryChange(category)}
-              className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-                selectedCategory === category
-                  ? "bg-[rgb(14,71,171)] text-white shadow-lg"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-              }`}
-            >
-              {category}
-            </button>
-          ))}
-        </motion.div>
-
         {/* Photo Grid */}
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+          ref={galleryRef}
+          className="flex overflow-x-auto gap-4 pb-4 scrollbar-hide"
           initial="hidden"
           animate={isVisible ? "visible" : "hidden"}
           variants={{
@@ -270,25 +309,21 @@ const PhotoGallerySection = () => {
           {displayedPhotos.map((photo, index) => (
             <motion.div
               key={photo.id}
-              className={`group relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-all duration-300 ${
-                photo.height === "tall"
-                  ? "row-span-2"
-                  : photo.height === "short"
-                  ? "row-span-1"
-                  : "row-span-1"
-              }`}
+              className={`mt-1 group relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-all duration-300 flex-shrink-0 cursor-pointer ${
+                selectedPhoto === index ? "ring-2 ring-blue-500" : ""
+              } w-[200px] h-[150px] sm:w-[225px] sm:h-[165px] md:w-[250px] md:h-[180px] lg:w-[275px] lg:h-[202px]`}
               variants={{
                 hidden: { opacity: 0, y: 20 },
                 visible: { opacity: 1, y: 0 },
               }}
               whileHover={{ scale: 1.02 }}
-              style={{
-                aspectRatio:
-                  photo.height === "tall"
-                    ? "3/4"
-                    : photo.height === "short"
-                    ? "16/9"
-                    : "1/1",
+              onClick={() => {
+                setSelectedPhoto(index);
+                scrollToSelectedPhoto(index);
+                stopAutoPlay();
+                setTimeout(() => {
+                  startAutoPlay();
+                }, 5000);
               }}
             >
               <img
@@ -312,27 +347,38 @@ const PhotoGallerySection = () => {
           ))}
         </motion.div>
 
-        {/* Load More Button */}
-        {hasMorePhotos && (
-          <motion.div
-            className="text-center mt-12"
-            initial="hidden"
-            animate={isVisible ? "visible" : "hidden"}
-            variants={fadeInUp}
-          >
-            <button
-              onClick={handleLoadMore}
-              disabled={isLoading}
-              className="bg-[rgb(14,71,171)] text-white px-8 py-3 rounded-lg font-medium hover:bg-[rgb(14,71,171)]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isLoading ? "Loading..." : "Load More Photos"}
-            </button>
-            <p className="text-sm text-gray-500 mt-2">
-              Showing {displayedPhotos.length} of {filteredPhotos.length}{" "}
-              {selectedCategory === "All" ? "" : selectedCategory} photos
+        {/* Preview section */}
+        <motion.div
+          className="mt-12 max-w-[400px] md:max-w-[700px] lg:max-w-[900px] h-[300px] md:h-[450px] lg:h-[500px] relative overflow-hidden rounded-lg shadow-lg mx-auto"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <motion.img
+            key={selectedPhoto} // This forces re-render when selectedPhoto changes
+            src={displayedPhotos[selectedPhoto ?? 0].url}
+            alt={displayedPhotos[selectedPhoto ?? 0].title}
+            className="w-full h-full object-cover"
+            initial={{ opacity: 0, scale: 1.1 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{ duration: 0.5 }}
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.onerror = null;
+              target.src =
+                "https://images.unsplash.com/photo-1559827260-dc66d52bef19?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80";
+            }}
+          />
+          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6">
+            <h3 className="text-2xl font-semibold text-white mb-2">
+              {displayedPhotos[selectedPhoto ?? 0].title}
+            </h3>
+            <p className="text-white/90">
+              {displayedPhotos[selectedPhoto ?? 0].category}
             </p>
-          </motion.div>
-        )}
+          </div>
+        </motion.div>
       </div>
     </section>
   );

@@ -32,20 +32,18 @@ const Header = () => {
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white border-b shadow-sm">
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+      <div className="container mx-auto px-4 h-14 flex items-center justify-between">
         {/* Logo */}
-        <div className="flex items-center">
-          <Link
-            href="/"
-            className="text-2xl font-bold text-[rgb(14,71,171)] hover:text-[rgb(14,71,171)]/80 transition-colors"
-          >
-            <img
-              src="/images/home/logo.webp"
-              alt="logo"
-              className="w-20 h-20 object-contain"
-            />
-          </Link>
-        </div>
+        <Link
+          href="/"
+          className="flex items-center text-2xl font-bold text-[rgb(14,71,171)] hover:text-[rgb(14,71,171)]/80 transition-colors"
+        >
+          <img
+            src="/images/home/logo.webp"
+            alt="logo"
+            className="w-auto h-12 object-contain"
+          />
+        </Link>
 
         {/* Desktop Navigation */}
         <nav className="hidden lg:flex items-center space-x-8">
@@ -54,7 +52,7 @@ const Header = () => {
               key={item.name}
               href={item.path}
               className={`text-sm font-medium transition-colors px-2 py-1 ${
-                                    pathname === item.path
+                pathname === item.path
                   ? "text-[rgb(14,71,171)] border-b-2 border-[rgb(14,71,171)]"
                   : "text-[oklch(0.373_0.034_259.733)] hover:text-[rgb(14,71,171)]"
               }`}
@@ -81,13 +79,21 @@ const Header = () => {
               <DialogHeader>
                 <div className="flex justify-center mb-4">
                   <button
-                    className={`px-4 py-2 font-semibold rounded-t-md focus:outline-none transition-colors ${authTab === "login" ? "bg-[rgb(14,71,171)] text-white" : "bg-gray-100 text-gray-700"}`}
+                    className={`px-4 py-2 font-semibold rounded-t-md focus:outline-none transition-colors ${
+                      authTab === "login"
+                        ? "bg-[rgb(14,71,171)] text-white"
+                        : "bg-gray-100 text-gray-700"
+                    }`}
                     onClick={() => setAuthTab("login")}
                   >
                     Login
                   </button>
                   <button
-                    className={`px-4 py-2 font-semibold rounded-t-md focus:outline-none transition-colors ${authTab === "register" ? "bg-[rgb(14,71,171)] text-white" : "bg-gray-100 text-gray-700"}`}
+                    className={`px-4 py-2 font-semibold rounded-t-md focus:outline-none transition-colors ${
+                      authTab === "register"
+                        ? "bg-[rgb(14,71,171)] text-white"
+                        : "bg-gray-100 text-gray-700"
+                    }`}
                     onClick={() => setAuthTab("register")}
                   >
                     Register

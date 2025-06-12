@@ -23,12 +23,12 @@ const SearchFilters = () => {
           animate={isVisible ? "visible" : "hidden"}
           variants={fadeInUp}
         >
-          <Card className="shadow-lg">
+          <Card className="shadow-lg border-[#FFC800] border-2">
             <CardContent className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
+              <div className="flex flex-col md:flex-row flex-wrap items-end">
                 {/* Destination */}
                 <motion.div
-                  className="space-y-2"
+                  className="space-y-2 flex-1"
                   initial="hidden"
                   animate={isVisible ? "visible" : "hidden"}
                   variants={{
@@ -40,13 +40,18 @@ const SearchFilters = () => {
                     },
                   }}
                 >
-                  <label className="flex items-center text-sm font-medium text-gray-700">
-                    <MapPin className="w-4 h-4 mr-2" />
-                    Destination
-                  </label>
                   <Select>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Where to go?" />
+                    <SelectTrigger className="border-none outline-none focus-visible:ring-0 focus:ring-offset-0 w-full">
+                      <SelectValue
+                        placeholder={
+                          <>
+                            <div className="flex items-center gap-2">
+                              <MapPin className="w-4 h-4 text-[#0E47AB]" />
+                              <span className="text-gray-500">Destination</span>
+                            </div>
+                          </>
+                        }
+                      />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="hanoi">Ha Noi</SelectItem>
@@ -58,9 +63,11 @@ const SearchFilters = () => {
                   </Select>
                 </motion.div>
 
+                <div className="hidden md:block h-10 w-[1px] bg-gray-200 mx-2" />
+
                 {/* Activity */}
                 <motion.div
-                  className="space-y-2"
+                  className="space-y-2 flex-1"
                   initial="hidden"
                   animate={isVisible ? "visible" : "hidden"}
                   variants={{
@@ -72,13 +79,18 @@ const SearchFilters = () => {
                     },
                   }}
                 >
-                  <label className="flex items-center text-sm font-medium text-gray-700">
-                    <CalendarDays className="w-4 h-4 mr-2" />
-                    Activity
-                  </label>
                   <Select>
-                    <SelectTrigger>
-                      <SelectValue placeholder="What to do?" />
+                    <SelectTrigger className="border-none outline-none focus-visible:ring-0 focus:ring-offset-0 w-full">
+                      <SelectValue
+                        placeholder={
+                          <>
+                            <div className="flex items-center gap-2">
+                              <CalendarDays className="w-4 h-4 text-[#0E47AB]" />
+                              <span className="text-gray-500">Activity</span>
+                            </div>
+                          </>
+                        }
+                      />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="cultural">
@@ -92,9 +104,11 @@ const SearchFilters = () => {
                   </Select>
                 </motion.div>
 
+                <div className="hidden md:block h-10 w-[1px] bg-gray-200 mx-2" />
+
                 {/* Duration */}
                 <motion.div
-                  className="space-y-2"
+                  className="space-y-2 flex-1"
                   initial="hidden"
                   animate={isVisible ? "visible" : "hidden"}
                   variants={{
@@ -106,13 +120,18 @@ const SearchFilters = () => {
                     },
                   }}
                 >
-                  <label className="flex items-center text-sm font-medium text-gray-700">
-                    <Clock className="w-4 h-4 mr-2" />
-                    Duration
-                  </label>
                   <Select>
-                    <SelectTrigger>
-                      <SelectValue placeholder="How long?" />
+                    <SelectTrigger className="border-none outline-none focus-visible:ring-0 focus:ring-offset-0 w-full">
+                      <SelectValue
+                        placeholder={
+                          <>
+                            <div className="flex items-center gap-2">
+                              <Clock className="w-4 h-4 text-[#0E47AB]" />
+                              <span className="text-gray-500">Duration</span>
+                            </div>
+                          </>
+                        }
+                      />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="1-day">1 Day</SelectItem>
@@ -123,9 +142,11 @@ const SearchFilters = () => {
                   </Select>
                 </motion.div>
 
+                <div className="hidden md:block h-10 w-[1px] bg-gray-200 mx-2" />
+
                 {/* Price */}
                 <motion.div
-                  className="space-y-2"
+                  className="space-y-2 flex-1"
                   initial="hidden"
                   animate={isVisible ? "visible" : "hidden"}
                   variants={{
@@ -137,13 +158,18 @@ const SearchFilters = () => {
                     },
                   }}
                 >
-                  <label className="flex items-center text-sm font-medium text-gray-700">
-                    <DollarSign className="w-4 h-4 mr-2" />
-                    Price Range
-                  </label>
                   <Select>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Budget?" />
+                    <SelectTrigger className="border-none outline-none focus-visible:ring-0 focus:ring-offset-0 w-full">
+                      <SelectValue
+                        placeholder={
+                          <>
+                            <div className="flex items-center gap-2">
+                              <DollarSign className="w-4 h-4 text-[#0E47AB]" />
+                              <span className="text-gray-500">Price Range</span>
+                            </div>
+                          </>
+                        }
+                      />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="0-50">$0 - $50</SelectItem>
@@ -154,8 +180,11 @@ const SearchFilters = () => {
                   </Select>
                 </motion.div>
 
+                <div className="hidden md:block h-10 w-[1px] bg-gray-200 mx-2" />
+
                 {/* Search Button */}
                 <motion.div
+                  className="flex-1"
                   initial="hidden"
                   animate={isVisible ? "visible" : "hidden"}
                   variants={{
