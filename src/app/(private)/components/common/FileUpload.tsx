@@ -1,5 +1,6 @@
 "use client";
 import { useState, useRef } from "react";
+import { redirect } from "next/navigation";
 
 interface FileUploadProps {
   label: string;

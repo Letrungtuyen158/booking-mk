@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-
+import React from "react";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
@@ -234,12 +233,13 @@ const tourData = {
   },
 };
 
-const TourDetail = () => {
-  const { id } = useParams<{ id: string }>() as { id: string };
+export default function TourDetail() {
+  const params = useParams?.();
+  const id = params && "id" in params ? params.id : undefined;
   const router = useRouter();
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [isBookingDialogOpen, setIsBookingDialogOpen] = useState(false);
-  const [bookingData, setBookingData] = useState({
+  const [currentImageIndex, setCurrentImageIndex] = React.useState(0);
+  const [isBookingDialogOpen, setIsBookingDialogOpen] = React.useState(false);
+  const [bookingData, setBookingData] = React.useState({
     fullName: "",
     email: "",
     phone: "",
@@ -250,7 +250,7 @@ const TourDetail = () => {
 
   const { ref, isVisible } = useScrollAnimation();
 
-  const tour = tourData[id as keyof typeof tourData];
+  const tour = id ? tourData[id as keyof typeof tourData] : null;
 
   if (!tour) {
     return (
@@ -755,6 +755,4 @@ const TourDetail = () => {
       <Footer />
     </div>
   );
-};
-
-export default TourDetail;
+}
