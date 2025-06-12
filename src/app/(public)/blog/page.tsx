@@ -8,9 +8,9 @@ export const metadata = {
 };
 
 export default async function BlogPage() {
-  const blogs: BlogPost[] = await blogService.getAllBlogs();
+  // const blogs: BlogPost[] = await blogService.getAllBlogs();
 
-  console.log(blogs);
+  // console.log(blogs);
 
   return <Blog />;
 }
