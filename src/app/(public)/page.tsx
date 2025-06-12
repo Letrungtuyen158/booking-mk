@@ -13,6 +13,7 @@ import FAQSection from "@/components/FAQSection";
 import PartnersSection from "@/components/PartnersSection";
 import FinalHeroSection from "@/components/FinalHeroSection";
 import Footer from "@/components/Footer";
+import TravelGallery from "@/components/TravelGallery";
 
 export default function HomePage() {
   return (
@@ -26,7 +27,8 @@ export default function HomePage() {
         <FeaturesSection />
         <TeamSection />
         <TestimonialsSection />
-        <GallerySection />
+        {/* <GallerySection /> */}
+        <TravelGallery />
         <PartnersSection />
         <PhotoGallerySection />
         <FAQSection />
