@@ -379,7 +379,7 @@ export default function AdminDashboard() {
   }
 
   const tabs = [
-    { id: "users", name: "Quản lí User", icon: "👥" },
+    { id: "users", name: "Quản lí Customers", icon: "👥" },
     { id: "orders", name: "Quản lí Order", icon: "📋" },
     { id: "products", name: "Quản lí Sản phẩm", icon: "🏷️" },
     { id: "categories", name: "Quản lí Category", icon: "📁" },

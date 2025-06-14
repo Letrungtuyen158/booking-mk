@@ -4,6 +4,7 @@ import FileUpload from "../common/FileUpload";
 import dynamic from "next/dynamic";
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.snow.css";
+import productService from "@/services/product.service";
 
 interface AddProductModalProps {
   isOpen: boolean;
@@ -21,6 +22,7 @@ export default function AddProductModal({
   const [formData, setFormData] = useState({
     name: initialData?.name || "",
     description: initialData?.description || "",
+    overviews: initialData?.overviews ? initialData.overviews.join(", ") : "",
     price: initialData?.price || "",
     category: initialData?.category || "",
     status: initialData?.status || "Hoạt động",
@@ -112,29 +114,39 @@ export default function AddProductModal({
     setIsLoading(true);
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // In real app, upload files to server/cloud storage first
-      const imageUrls = imagePreviews; // Simulate uploaded URLs
-      const videoUrls = videoPreviews; // Simulate uploaded URLs
-
-      onSave({
+      // Gộp ảnh và video vào chung 1 mảng files
+      const files = [...imageFiles, ...videoFiles];
+      // Chuẩn bị dữ liệu gửi lên BE
+      const submitData = {
         ...formData,
-        id: Date.now(),
+        overviews: formData.overviews
+          ? formData.overviews
+              .split(",")
+              .map((s: string) => s.trim())
+              .filter(Boolean)
+          : [],
+      };
+      if (files.length > 0) {
+        await productService.updateProduct(initialData?.id, {
+          ...submitData,
+          files,
+        });
+      } else {
+        await productService.updateProduct(initialData?.id, submitData);
+      }
+      onSave({
+        ...submitData,
+        id: initialData?.id || Date.now(),
         price: formData.price
           ? `${parseInt(formData.price).toLocaleString()} VND`
           : "",
-        images: imageUrls,
-        videos: videoUrls,
-        imageFiles, // For debugging
-        videoFiles, // For debugging
+        urls: [...imagePreviews, ...videoPreviews],
+        files,
       });
-
-      // Reset form
       setFormData({
         name: "",
         description: "",
+        overviews: "",
         price: "",
         category: "",
         status: "Hoạt động",
@@ -156,6 +168,9 @@ export default function AddProductModal({
       setFormData({
         name: initialData.name || "",
         description: initialData.description || "",
+        overviews: initialData.overviews
+          ? initialData.overviews.join(", ")
+          : "",
         price: initialData.price || "",
         category: initialData.category || "",
         status: initialData.status || "Hoạt động",
@@ -164,6 +179,7 @@ export default function AddProductModal({
       setFormData({
         name: "",
         description: "",
+        overviews: "",
         price: "",
         category: "",
         status: "Hoạt động",
@@ -225,7 +241,21 @@ export default function AddProductModal({
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Mô tả *
+                Mô tả (nhiều mục, cách nhau bởi dấu phẩy)
+              </label>
+              <input
+                type="text"
+                name="overviews"
+                value={formData.overviews}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                placeholder="Nhập các mô tả, cách nhau bởi dấu phẩy"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Chi tiết
               </label>
               <ReactQuill
                 theme="snow"
@@ -234,7 +264,7 @@ export default function AddProductModal({
                   setFormData({ ...formData, description: value })
                 }
                 className="bg-white"
-                placeholder="Nhập mô tả sản phẩm"
+                placeholder="Nhập chi tiết sản phẩm"
               />
             </div>
 
