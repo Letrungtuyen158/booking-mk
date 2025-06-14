@@ -1,11 +1,5 @@
-"use client";
-import { Providers } from "@/app/providers";
-import AdminDashboard from "@/pages/Dashboard";
+import AdminDashboard from "@/pages/DashboardAdmin";
 
 export default function AdminDashboardPage() {
-  return (
-    <Providers>
-      <AdminDashboard />
-    </Providers>
-  );
+  return <AdminDashboard />;
 }

@@ -68,6 +68,7 @@ export default function AddCategoryModal({
         });
       } else {
         // Need to FIX: Unexpected error: message["image must be a string"]
+        // So not yet create new category
         addCategory(data as any);
       }
 
