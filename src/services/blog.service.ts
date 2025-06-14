@@ -11,7 +11,7 @@ export interface CreateBlogDto {
 export interface BlogListRequests extends GeneralRequest {}
 export interface BlogListResponse extends GeneralResponse<Blog> {}
 
-class BlogService extends BaseService<Blog, BlogListRequests, CreateBlogDto> {
+class BlogService extends BaseService<Blog, CreateBlogDto> {
   constructor() {
     super("/blogs");
   }

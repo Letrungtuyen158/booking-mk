@@ -5,6 +5,8 @@ import dynamic from "next/dynamic";
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.snow.css";
 import productService from "@/services/product.service";
+import { STATUS_TYPES, StatusType } from "@/types/api";
+import { useAddProduct, useUpdateProduct } from "@/hooks/useProduct";
 
 interface AddProductModalProps {
   isOpen: boolean;
@@ -19,13 +21,16 @@ export default function AddProductModal({
   onSave,
   initialData,
 }: AddProductModalProps) {
+  const { mutate: addProduct } = useAddProduct();
+  const { mutate: updateProduct } = useUpdateProduct();
+
   const [formData, setFormData] = useState({
     name: initialData?.name || "",
     description: initialData?.description || "",
     overviews: initialData?.overviews ? initialData.overviews.join(", ") : "",
     price: initialData?.price || "",
     category: initialData?.category || "",
-    status: initialData?.status || "Hoạt động",
+    status: initialData?.status || StatusType.ACTIVE,
   });
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [videoFiles, setVideoFiles] = useState<File[]>([]);
@@ -43,8 +48,6 @@ export default function AddProductModal({
     "Tour team building",
     "Tour honeymoon",
   ];
-
-  const statuses = ["Hoạt động", "Tạm dừng"];
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -126,30 +129,37 @@ export default function AddProductModal({
               .filter(Boolean)
           : [],
       };
-      if (files.length > 0) {
-        await productService.updateProduct(initialData?.id, {
-          ...submitData,
-          files,
-        });
+
+      if (initialData) {
+        // Need to FIX: Category is not being updated
+        const { category, ...data } = submitData;
+        // Need to FIX: Files is not being updated
+        if (files.length > 0) {
+          updateProduct({
+            id: initialData?.id,
+            data: {
+              ...data,
+              files,
+            },
+          });
+        } else {
+          updateProduct({
+            id: initialData?.id,
+            data,
+          });
+        }
       } else {
-        await productService.updateProduct(initialData?.id, submitData);
+        const { category, ...data } = submitData;
+        addProduct(data);
       }
-      onSave({
-        ...submitData,
-        id: initialData?.id || Date.now(),
-        price: formData.price
-          ? `${parseInt(formData.price).toLocaleString()} VND`
-          : "",
-        urls: [...imagePreviews, ...videoPreviews],
-        files,
-      });
+
       setFormData({
         name: "",
         description: "",
         overviews: "",
         price: "",
         category: "",
-        status: "Hoạt động",
+        status: StatusType.ACTIVE,
       });
       setImageFiles([]);
       setVideoFiles([]);
@@ -173,7 +183,7 @@ export default function AddProductModal({
           : "",
         price: initialData.price || "",
         category: initialData.category || "",
-        status: initialData.status || "Hoạt động",
+        status: initialData.status || StatusType.ACTIVE,
       });
     } else {
       setFormData({
@@ -182,7 +192,7 @@ export default function AddProductModal({
         overviews: "",
         price: "",
         category: "",
-        status: "Hoạt động",
+        status: StatusType.ACTIVE,
       });
     }
   }, [initialData, isOpen]);
@@ -296,9 +306,9 @@ export default function AddProductModal({
                   required
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 >
-                  {statuses.map((status) => (
-                    <option key={status} value={status}>
-                      {status}
+                  {STATUS_TYPES.map((status) => (
+                    <option key={status.value} value={status.value}>
+                      {status.label}
                     </option>
                   ))}
                 </select>

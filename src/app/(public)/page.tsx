@@ -1,4 +1,4 @@
-import { INITIAL_LIST, TopProvider, useTop } from "@/contexts/TopContext";
+import { INITIAL_LIST } from "@/contexts/TopContext";
 import Index from "@/pages/Index";
 import productService from "@/services/product.service";
 import categoryService from "@/services/category.service";
@@ -37,13 +37,11 @@ export default async function HomePage() {
     await getInitialData();
 
   return (
-    <TopProvider
+    <Index
       initialProducts={productList}
       initialCategories={categoryList}
       initialBlogs={blogsList}
       initialPartners={partnersList}
-    >
-      <Index />
-    </TopProvider>
+    />
   );
 }

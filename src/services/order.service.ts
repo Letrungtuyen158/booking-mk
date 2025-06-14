@@ -14,11 +14,7 @@ export interface CreateOrderDto {
   date: string;
 }
 
-class OrderService extends BaseService<
-  Order,
-  OrderListRequests,
-  CreateOrderDto
-> {
+class OrderService extends BaseService<Order, CreateOrderDto> {
   constructor() {
     super("/orders");
   }

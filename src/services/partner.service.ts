@@ -13,11 +13,7 @@ export interface CreatePartnerDto {
   status: string;
 }
 
-class PartnerService extends BaseService<
-  Partner,
-  PartnerListRequests,
-  CreatePartnerDto
-> {
+class PartnerService extends BaseService<Partner, CreatePartnerDto> {
   constructor() {
     super("/partners");
   }

@@ -12,10 +12,30 @@ export interface BaseEntity {
 }
 
 // Media types
+export enum MediaType {
+  IMAGE = 1,
+  VIDEO = 2,
+}
 export interface MediaUrl {
   url: string;
-  type: number; // 1 for image, 2 for video
+  type: MediaType;
 }
+
+export enum StatusType {
+  ACTIVE = 1,
+  INACTIVE = 2,
+}
+
+export const STATUS_TYPES = [
+  {
+    value: StatusType.ACTIVE,
+    label: "Hoạt động",
+  },
+  {
+    value: StatusType.INACTIVE,
+    label: "Tạm dừng",
+  },
+];
 
 // Tour related types
 export interface Product extends BaseEntity {
@@ -24,13 +44,13 @@ export interface Product extends BaseEntity {
   price: number;
   urls: MediaUrl[];
   rating: number;
-  status: number;
+  status: StatusType;
   image: string;
   reviews: number;
   overviews: any[]; // You might want to define a specific type for overviews
   tripDuration: string;
   location: string;
-  groupSize: string;
+  category: string;
 }
 
 export interface DayItinerary {
@@ -184,7 +204,9 @@ export interface BlogFilters {
 // Category types
 export interface Category extends BaseEntity {
   name: string;
-  image: string;
+  description: string;
+  status: StatusType;
+  productCount: number;
 }
 
 // Blog types

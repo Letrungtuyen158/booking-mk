@@ -2,17 +2,8 @@
 import { useState } from "react";
 import PaginationControls from "./PaginationControls";
 import AddProductModal from "../modals/AddProductModal";
-
-interface Product {
-  id: number;
-  name: string;
-  description: string;
-  price: string;
-  images?: string[];
-  videos?: string[];
-  category: string;
-  status: string;
-}
+import { MediaType, Product, StatusType } from "@/types/api";
+import { getMediaContents } from "@/utils/getMediaContent";
 
 interface ProductsTabProps {
   products: Product[];
@@ -22,7 +13,7 @@ interface ProductsTabProps {
   onPageChange: (page: number) => void;
   onLimitChange: (limit: number) => void;
   onAddProduct: (productData: any) => void;
-  onDeleteProduct: (id: number) => void;
+  onDeleteProduct: (id: string) => void;
 }
 
 export default function ProductsTab({
@@ -71,7 +62,7 @@ export default function ProductsTab({
     handleCloseModal();
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa?")) {
       onDeleteProduct(id);
     }
@@ -135,76 +126,92 @@ export default function ProductsTab({
                     {/* Images Column */}
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex space-x-1">
-                        {product.images && product.images.length > 0 ? (
-                          <>
-                            <img
-                              src={product.images[0]}
-                              alt="Product"
-                              className="h-12 w-12 object-cover rounded cursor-pointer hover:opacity-80"
-                              onClick={() =>
-                                openMediaPreview("image", product.images![0])
-                              }
-                            />
-                            {product.images.length > 1 && (
-                              <div className="h-12 w-8 bg-gray-200 rounded flex items-center justify-center">
-                                <span className="text-xs text-gray-600">
-                                  +{product.images.length - 1}
-                                </span>
-                              </div>
-                            )}
-                          </>
-                        ) : (
-                          <div className="h-12 w-12 bg-gray-200 rounded flex items-center justify-center">
-                            <span className="text-xs text-gray-500">
-                              No image
-                            </span>
-                          </div>
-                        )}
+                        {(() => {
+                          const images = getMediaContents(
+                            product.urls,
+                            MediaType.IMAGE,
+                          );
+                          if (images.length === 0)
+                            <div className="h-12 w-12 bg-gray-200 rounded flex items-center justify-center">
+                              <span className="text-xs text-gray-500">
+                                No image
+                              </span>
+                            </div>;
+
+                          return (
+                            <>
+                              <img
+                                src={images[0]}
+                                alt="Product"
+                                className="h-12 w-12 object-cover rounded cursor-pointer hover:opacity-80"
+                                onClick={() =>
+                                  openMediaPreview("image", images[0])
+                                }
+                              />
+                              ;
+                              {images.length > 1 && (
+                                <div className="h-12 w-8 bg-gray-200 rounded flex items-center justify-center">
+                                  <span className="text-xs text-gray-600">
+                                    +{images.length - 1}
+                                  </span>
+                                </div>
+                              )}
+                            </>
+                          );
+                        })()}
                       </div>
                     </td>
 
                     {/* Videos Column */}
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex space-x-1">
-                        {product.videos && product.videos.length > 0 ? (
-                          <>
-                            <div className="relative">
-                              <video
-                                src={product.videos[0]}
-                                className="h-12 w-16 object-cover rounded cursor-pointer hover:opacity-80"
-                                onClick={() =>
-                                  openMediaPreview("video", product.videos![0])
-                                }
-                              />
-                              <div className="absolute inset-0 flex items-center justify-center">
-                                <svg
-                                  className="w-4 h-4 text-white"
-                                  fill="currentColor"
-                                  viewBox="0 0 20 20"
-                                >
-                                  <path
-                                    fillRule="evenodd"
-                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                                    clipRule="evenodd"
-                                  />
-                                </svg>
-                              </div>
-                            </div>
-                            {product.videos.length > 1 && (
-                              <div className="h-12 w-8 bg-gray-200 rounded flex items-center justify-center">
-                                <span className="text-xs text-gray-600">
-                                  +{product.videos.length - 1}
+                        {(() => {
+                          const videos = getMediaContents(
+                            product.urls,
+                            MediaType.VIDEO,
+                          );
+                          if (videos.length === 0)
+                            return (
+                              <div className="h-12 w-16 bg-gray-200 rounded flex items-center justify-center">
+                                <span className="text-xs text-gray-500">
+                                  No video
                                 </span>
                               </div>
-                            )}
-                          </>
-                        ) : (
-                          <div className="h-12 w-16 bg-gray-200 rounded flex items-center justify-center">
-                            <span className="text-xs text-gray-500">
-                              No video
-                            </span>
-                          </div>
-                        )}
+                            );
+                          return (
+                            <>
+                              <div className="relative">
+                                <video
+                                  src={videos[0]}
+                                  className="h-12 w-16 object-cover rounded cursor-pointer hover:opacity-80"
+                                  onClick={() =>
+                                    openMediaPreview("video", videos[0])
+                                  }
+                                />
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                  <svg
+                                    className="w-4 h-4 text-white"
+                                    fill="currentColor"
+                                    viewBox="0 0 20 20"
+                                  >
+                                    <path
+                                      fillRule="evenodd"
+                                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                                      clipRule="evenodd"
+                                    />
+                                  </svg>
+                                </div>
+                              </div>
+                              {videos.length > 1 && (
+                                <div className="h-12 w-8 bg-gray-200 rounded flex items-center justify-center">
+                                  <span className="text-xs text-gray-600">
+                                    +{videos.length - 1}
+                                  </span>
+                                </div>
+                              )}
+                            </>
+                          );
+                        })()}
                       </div>
                     </td>
 
@@ -223,12 +230,14 @@ export default function ProductsTab({
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
                         className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                          product.status === "Hoạt động"
+                          product.status === StatusType.ACTIVE
                             ? "bg-green-100 text-green-800"
                             : "bg-red-100 text-red-800"
                         }`}
                       >
-                        {product.status}
+                        {product.status === StatusType.ACTIVE
+                          ? "Hoạt động"
+                          : "Tạm dừng"}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">

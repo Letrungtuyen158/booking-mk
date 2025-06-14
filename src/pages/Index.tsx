@@ -1,5 +1,6 @@
 "use client";
 
+import { TopProvider } from "@/contexts/TopContext";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import SearchFilters from "@/components/SearchFilters";
@@ -11,29 +12,50 @@ import TestimonialsSection from "@/components/TestimonialsSection";
 import PhotoGallerySection from "@/components/PhotoGallerySection";
 import FAQSection from "@/components/FAQSection";
 import PartnersSection from "@/components/PartnersSection";
-import FinalHeroSection from "@/components/FinalHeroSection";
 import Footer from "@/components/Footer";
 import TravelGallery from "@/components/TravelGallery";
+import { Providers } from "@/app/providers";
 
-const Index = () => {
+interface Props {
+  initialProducts: any;
+  initialCategories: any;
+  initialBlogs: any;
+  initialPartners: any;
+}
+
+const Index = ({
+  initialProducts,
+  initialCategories,
+  initialBlogs,
+  initialPartners,
+}: Props) => {
   return (
-    <div className="min-h-screen">
-      <Header />
-      <main>
-        <HeroSection />
-        <SearchFilters />
-        <TourCategories />
-        <TourPackages />
-        <FeaturesSection />
-        <TeamSection />
-        <TestimonialsSection />
-        <TravelGallery />
-        <PartnersSection />
-        <PhotoGallerySection />
-        <FAQSection />
-      </main>
-      <Footer />
-    </div>
+    <Providers>
+      <TopProvider
+        initialProducts={initialProducts}
+        initialCategories={initialCategories}
+        initialBlogs={initialBlogs}
+        initialPartners={initialPartners}
+      >
+        <div className="min-h-screen">
+          <Header />
+          <main>
+            <HeroSection />
+            <SearchFilters />
+            <TourCategories />
+            <TourPackages />
+            <FeaturesSection />
+            <TeamSection />
+            <TestimonialsSection />
+            <TravelGallery />
+            <PartnersSection />
+            <PhotoGallerySection />
+            <FAQSection />
+          </main>
+          <Footer />
+        </div>
+      </TopProvider>
+    </Providers>
   );
 };
 

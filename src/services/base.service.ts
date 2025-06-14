@@ -67,7 +67,10 @@ export class BaseService<
    */
   async update(id: string | number, data: UpdateDto): Promise<T> {
     try {
-      const response = await axiosInstance.put(this.getUrl(id), data);
+      const response = await axiosInstance.put(
+        `${this.endpoint}/update/${id}`,
+        data,
+      );
       return response.data;
     } catch (error) {
       console.error(`Error updating ${this.endpoint} with ID ${id}:`, error);
@@ -80,7 +83,7 @@ export class BaseService<
    */
   async delete(id: string | number): Promise<void> {
     try {
-      await axiosInstance.delete(this.getUrl(id));
+      await axiosInstance.put(`${this.endpoint}/delete/${id}`);
     } catch (error) {
       console.error(`Error deleting ${this.endpoint} with ID ${id}:`, error);
       throw error;

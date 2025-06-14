@@ -2,14 +2,7 @@
 import { useState } from "react";
 import PaginationControls from "./PaginationControls";
 import AddCategoryModal from "../modals/AddCategoryModal";
-
-interface Category {
-  id: number;
-  name: string;
-  description: string;
-  productCount: number;
-  status: string;
-}
+import { Category, StatusType } from "@/types/api";
 
 interface CategoriesTabProps {
   categories: Category[];
@@ -19,7 +12,7 @@ interface CategoriesTabProps {
   onPageChange: (page: number) => void;
   onLimitChange: (limit: number) => void;
   onAddCategory: (categoryData: any) => void;
-  onDeleteCategory: (id: number) => void;
+  onDeleteCategory: (id: string) => void;
 }
 
 export default function CategoriesTab({
@@ -54,7 +47,7 @@ export default function CategoriesTab({
     handleCloseModal();
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa?")) {
       onDeleteCategory(id);
     }
@@ -117,7 +110,7 @@ export default function CategoriesTab({
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
                         className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                          category.status === "Hoạt động"
+                          category.status === StatusType.ACTIVE
                             ? "bg-green-100 text-green-800"
                             : "bg-red-100 text-red-800"
                         }`}

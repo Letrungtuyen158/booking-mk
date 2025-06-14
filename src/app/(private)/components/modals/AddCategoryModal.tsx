@@ -1,4 +1,6 @@
 "use client";
+import { useAddCategory, useUpdateCategory } from "@/hooks/useCategory";
+import { STATUS_TYPES, StatusType } from "@/types/api";
 import { useState, useEffect } from "react";
 
 interface AddCategoryModalProps {
@@ -14,27 +16,28 @@ export default function AddCategoryModal({
   onSave,
   initialData,
 }: AddCategoryModalProps) {
+  const { mutate: addCategory } = useAddCategory();
+  const { mutate: updateCategory } = useUpdateCategory();
+
   const [formData, setFormData] = useState({
     name: initialData?.name || "",
     description: initialData?.description || "",
-    status: initialData?.status || "Hoạt động",
+    status: initialData?.status || StatusType.ACTIVE,
   });
   const [isLoading, setIsLoading] = useState(false);
-
-  const statuses = ["Hoạt động", "Tạm dừng"];
 
   useEffect(() => {
     if (initialData) {
       setFormData({
         name: initialData.name || "",
         description: initialData.description || "",
-        status: initialData.status || "Hoạt động",
+        status: initialData.status || StatusType.ACTIVE,
       });
     } else {
       setFormData({
         name: "",
         description: "",
-        status: "Hoạt động",
+        status: StatusType.ACTIVE,
       });
     }
   }, [initialData, isOpen]);
@@ -55,20 +58,19 @@ export default function AddCategoryModal({
     setIsLoading(true);
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      onSave({
-        ...formData,
-        id: Date.now(),
-        productCount: 0,
-      });
+      // Need to FIX: status and description are not being updated
+      const { status, description, ...data } = formData;
 
-      // Reset form
-      setFormData({
-        name: "",
-        description: "",
-        status: "Hoạt động",
-      });
+      if (initialData) {
+        updateCategory({
+          id: initialData.id,
+          category: data as any,
+        });
+      } else {
+        // Need to FIX: Unexpected error: message["image must be a string"]
+        addCategory(data as any);
+      }
+
       onClose();
     } catch (error) {
       console.error("Error saving category:", error);
@@ -155,9 +157,9 @@ export default function AddCategoryModal({
                 required
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
-                {statuses.map((status) => (
-                  <option key={status} value={status}>
-                    {status}
+                {STATUS_TYPES.map((status) => (
+                  <option key={status.value} value={status.value}>
+                    {status.label}
                   </option>
                 ))}
               </select>
