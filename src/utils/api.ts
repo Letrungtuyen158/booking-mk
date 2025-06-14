@@ -242,11 +242,14 @@ export const parseApiDate = (dateString: string): Date => {
 // Price utilities
 export const formatPrice = (
   price: number,
+  decimals: number = 2,
   currency: string = "USD",
 ): string => {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: currency,
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
   }).format(price);
 };
 

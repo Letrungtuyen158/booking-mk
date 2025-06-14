@@ -1,13 +1,10 @@
+import { Partner } from "@/types/api";
+import { BaseService } from "./base.service";
+import { GeneralRequest, GeneralResponse } from "./type";
 import { axiosInstance } from "@/utils/axiosInstance";
 
-// Types
-export interface Partner {
-  id: string | number;
-  name: string;
-  contact: string;
-  phone: string;
-  status: string;
-}
+export interface PartnerListRequests extends GeneralRequest {}
+export interface PartnerListResponse extends GeneralResponse<Partner> {}
 
 export interface CreatePartnerDto {
   name: string;
@@ -16,47 +13,10 @@ export interface CreatePartnerDto {
   status: string;
 }
 
-const partnerService = {
-  /**
-   * Lấy danh sách partner
-   */
-  async getAllPartners(page = 1, limit = 10): Promise<Partner[]> {
-    try {
-      const response = await axiosInstance.get("/partners", {
-        params: { page, limit },
-      });
-      return response.data;
-    } catch (error) {
-      console.error("Error fetching partners:", error);
-      throw error;
-    }
-  },
-
-  /**
-   * Lấy partner theo ID
-   */
-  async getPartnerById(id: string | number): Promise<Partner> {
-    try {
-      const response = await axiosInstance.get(`/partners/${id}`);
-      return response.data;
-    } catch (error) {
-      console.error(`Error fetching partner with ID ${id}:`, error);
-      throw error;
-    }
-  },
-
-  /**
-   * Tạo partner mới
-   */
-  async createPartner(partnerData: CreatePartnerDto): Promise<Partner> {
-    try {
-      const response = await axiosInstance.post("/partners", partnerData);
-      return response.data;
-    } catch (error) {
-      console.error("Error creating partner:", error);
-      throw error;
-    }
-  },
+class PartnerService extends BaseService<Partner, CreatePartnerDto> {
+  constructor() {
+    super("/partners");
+  }
 
   /**
    * Cập nhật partner
@@ -93,19 +53,7 @@ const partnerService = {
       console.error(`Error updating partner with ID ${id}:`, error);
       throw error;
     }
-  },
+  }
+}
 
-  /**
-   * Xóa partner
-   */
-  async deletePartner(id: string | number): Promise<void> {
-    try {
-      await axiosInstance.delete(`/partners/${id}`);
-    } catch (error) {
-      console.error(`Error deleting partner with ID ${id}:`, error);
-      throw error;
-    }
-  },
-};
-
-export default partnerService;
+export default new PartnerService();
