@@ -1,40 +1,49 @@
-"use client";
-import Header from "@/components/Header";
-import HeroSection from "@/components/HeroSection";
-import SearchFilters from "@/components/SearchFilters";
-import TourCategories from "@/components/TourCategories";
-import TourPackages from "@/components/TourPackages";
-import FeaturesSection from "@/components/FeaturesSection";
-import GallerySection from "@/components/GallerySection";
-import TeamSection from "@/components/TeamSection";
-import TestimonialsSection from "@/components/TestimonialsSection";
-import PhotoGallerySection from "@/components/PhotoGallerySection";
-import FAQSection from "@/components/FAQSection";
-import PartnersSection from "@/components/PartnersSection";
-import FinalHeroSection from "@/components/FinalHeroSection";
-import Footer from "@/components/Footer";
-import TravelGallery from "@/components/TravelGallery";
+import { INITIAL_LIST, TopProvider, useTop } from "@/contexts/TopContext";
+import Index from "@/pages/Index";
+import productService from "@/services/product.service";
+import categoryService from "@/services/category.service";
+import blogService from "@/services/blog.service";
+import partnerService from "@/services/partner.service";
 
-export default function HomePage() {
+async function getInitialData() {
+  try {
+    const [productList, categoryList, blogsList, partnersList] =
+      await Promise.all([
+        productService.getAll({ page: 1, limit: 4 }),
+        categoryService.getAll({}),
+        blogService.getAll({}),
+        partnerService.getAll({}),
+      ]);
+
+    return {
+      productList,
+      categoryList,
+      blogsList,
+      partnersList,
+    };
+  } catch (error) {
+    console.error("Error fetching initial data:", error);
+    return {
+      productList: INITIAL_LIST,
+      categoryList: INITIAL_LIST,
+      blogsList: INITIAL_LIST,
+      partnersList: INITIAL_LIST,
+    };
+  }
+}
+
+export default async function HomePage() {
+  const { productList, categoryList, blogsList, partnersList } =
+    await getInitialData();
+
   return (
-    <div className="min-h-screen">
-      <Header />
-      <main>
-        <HeroSection />
-        <SearchFilters />
-        <TourCategories />
-        <TourPackages />
-        <FeaturesSection />
-        <TeamSection />
-        <TestimonialsSection />
-        {/* <GallerySection /> */}
-        <TravelGallery />
-        <PartnersSection />
-        <PhotoGallerySection />
-        <FAQSection />
-        <FinalHeroSection />
-      </main>
-      <Footer />
-    </div>
+    <TopProvider
+      initialProducts={productList}
+      initialCategories={categoryList}
+      initialBlogs={blogsList}
+      initialPartners={partnersList}
+    >
+      <Index />
+    </TopProvider>
   );
 }

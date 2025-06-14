@@ -1,26 +1,36 @@
+// -------------------------------------------------------------------------------
+// Entity types
+// -------------------------------------------------------------------------------
+
+// Common Base Entity
+export interface BaseEntity {
+  id: string;
+  pageSite: number;
+  isDelete: boolean;
+  createdDate: string;
+  latestUpdate: string;
+}
+
+// Media types
+export interface MediaUrl {
+  url: string;
+  type: number; // 1 for image, 2 for video
+}
+
 // Tour related types
-export interface Tour {
-  id: number;
-  title: string;
+export interface Product extends BaseEntity {
+  name: string;
   description: string;
-  image: string;
-  images: string[];
-  rating: number;
-  reviews: number;
-  duration: string;
-  groupSize: string;
-  location: string;
   price: number;
-  originalPrice?: number;
-  features: string[];
-  departure: string;
-  category: string;
-  highlights: string[];
-  itinerary: DayItinerary[];
-  included: string[];
-  notIncluded: string[];
-  featured?: boolean;
-  bestTime?: string;
+  urls: MediaUrl[];
+  rating: number;
+  status: number;
+  image: string;
+  reviews: number;
+  overviews: any[]; // You might want to define a specific type for overviews
+  tripDuration: string;
+  location: string;
+  groupSize: string;
 }
 
 export interface DayItinerary {
@@ -43,7 +53,7 @@ export interface BookingRequest {
 export interface Booking {
   id: string;
   tourId: number;
-  tour: Tour;
+  tour: Product;
   customerInfo: {
     fullName: string;
     email: string;
@@ -169,4 +179,36 @@ export interface BlogFilters {
   search?: string;
   page?: number;
   limit?: number;
+}
+
+// Category types
+export interface Category extends BaseEntity {
+  name: string;
+  image: string;
+}
+
+// Blog types
+export interface Blog extends BaseEntity {
+  title: string;
+  content: string;
+  image: string;
+}
+
+// Partner types
+export interface Partner extends BaseEntity {
+  name: string;
+  contact: string;
+  phone: string;
+  status: string;
+  logo?: string;
+}
+
+// Order types
+export interface Order extends BaseEntity {
+  customerName: string;
+  service: string;
+  product: string;
+  status: string;
+  amount: string;
+  date: string;
 }

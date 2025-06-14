@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     console.log(page, limit);
 
     // Gọi service
-    const blogs = await blogService.getAllBlogs(page, limit);
+    const blogs = await blogService.getAll({ page, limit });
 
     // Trả về response
     return NextResponse.json(blogs);
@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
 
     // Gọi service
-    const newBlog = await blogService.createBlog(body);
+    const newBlog = await blogService.create(body);
 
     // Trả về response
     return NextResponse.json(newBlog, { status: 201 });

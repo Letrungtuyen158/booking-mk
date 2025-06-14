@@ -6,7 +6,6 @@ import SearchFilters from "@/components/SearchFilters";
 import TourCategories from "@/components/TourCategories";
 import TourPackages from "@/components/TourPackages";
 import FeaturesSection from "@/components/FeaturesSection";
-import GallerySection from "@/components/GallerySection";
 import TeamSection from "@/components/TeamSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import PhotoGallerySection from "@/components/PhotoGallerySection";
@@ -14,6 +13,7 @@ import FAQSection from "@/components/FAQSection";
 import PartnersSection from "@/components/PartnersSection";
 import FinalHeroSection from "@/components/FinalHeroSection";
 import Footer from "@/components/Footer";
+import TravelGallery from "@/components/TravelGallery";
 
 const Index = () => {
   return (
@@ -27,11 +27,10 @@ const Index = () => {
         <FeaturesSection />
         <TeamSection />
         <TestimonialsSection />
-        <GallerySection />
+        <TravelGallery />
         <PartnersSection />
         <PhotoGallerySection />
         <FAQSection />
-        <FinalHeroSection />
       </main>
       <Footer />
     </div>

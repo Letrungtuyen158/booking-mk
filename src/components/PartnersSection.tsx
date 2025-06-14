@@ -1,31 +1,9 @@
-const partners = [
-  {
-    name: "TripAdvisor",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/TripAdvisor_Logo.svg/2560px-TripAdvisor_Logo.svg.png",
-  },
-  {
-    name: "Booking.com",
-    logo: "https://logos-world.net/wp-content/uploads/2021/08/Booking-Logo.png",
-  },
-  {
-    name: "Expedia",
-    logo: "https://logos-world.net/wp-content/uploads/2021/02/Expedia-Logo.png",
-  },
-  {
-    name: "Airbnb",
-    logo: "https://logos-world.net/wp-content/uploads/2020/10/Airbnb-Logo.png",
-  },
-  {
-    name: "Agoda",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Agoda_transparent_logo.svg/2560px-Agoda_transparent_logo.svg.png",
-  },
-  {
-    name: "Viator",
-    logo: "https://logos-world.net/wp-content/uploads/2022/01/Viator-Logo.png",
-  },
-];
+import { useTop } from "@/contexts/TopContext";
+import { DEFAULT_IMAGE, DEFAULT_IMAGE_ERROR } from "@/utils/constants";
 
 const PartnersSection = () => {
+  const { partnersList } = useTop();
+
   return (
     <section className="py-8 bg-white">
       <div className="container mx-auto px-4 max-w-[1240px]">
@@ -37,20 +15,19 @@ const PartnersSection = () => {
 
         {/* Partners Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 items-center">
-          {partners.map((partner, index) => (
+          {partnersList.list.map((partner, index) => (
             <div
               key={index}
               className="flex items-center justify-center p-4 grayscale hover:grayscale-0 transition-all duration-300 hover:scale-105"
             >
               <img
-                src={partner.logo}
+                src={partner.logo ?? DEFAULT_IMAGE}
                 alt={partner.name}
                 className="max-h-12 w-auto object-contain"
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
                   target.onerror = null;
-                  target.src =
-                    "https://images.unsplash.com/photo-1559827260-dc66d52bef19?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80";
+                  target.src = DEFAULT_IMAGE_ERROR;
                 }}
               />
             </div>

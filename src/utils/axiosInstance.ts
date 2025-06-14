@@ -1,3 +1,4 @@
+import { BACKEND_API_URL } from "./constants";
 import {
   getRefreshToken,
   getSession,
@@ -15,7 +16,7 @@ interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
   _retry?: boolean;
 }
 
-const baseURL = process.env.BACKEND_API_URL;
+const baseURL = BACKEND_API_URL;
 let isRefreshing = false;
 let failedQueue: any[] = [];
 // Create an instance of Axios with default configuration

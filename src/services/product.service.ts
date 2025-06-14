@@ -1,16 +1,7 @@
+import { MediaUrl, Product } from "@/types/api";
+import { BaseService } from "./base.service";
+import { GeneralRequest, GeneralResponse } from "./type";
 import { axiosInstance } from "@/utils/axiosInstance";
-
-// Types
-export interface Product {
-  id: string | number;
-  name: string;
-  description: string;
-  price: string;
-  images?: string[];
-  videos?: string[];
-  category: string;
-  status: string;
-}
 
 export interface CreateProductDto {
   name: string;
@@ -22,47 +13,13 @@ export interface CreateProductDto {
   status: string;
 }
 
-const productService = {
-  /**
-   * Lấy danh sách sản phẩm
-   */
-  async getAllProducts(page = 1, limit = 10): Promise<Product[]> {
-    try {
-      const response = await axiosInstance.get("/products", {
-        params: { page, limit },
-      });
-      return response.data;
-    } catch (error) {
-      console.error("Error fetching products:", error);
-      throw error;
-    }
-  },
+export interface ProductListRequests extends GeneralRequest {}
+export interface ProductListResponse extends GeneralResponse<Product> {}
 
-  /**
-   * Lấy sản phẩm theo ID
-   */
-  async getProductById(id: string | number): Promise<Product> {
-    try {
-      const response = await axiosInstance.get(`/products/${id}`);
-      return response.data;
-    } catch (error) {
-      console.error(`Error fetching product with ID ${id}:`, error);
-      throw error;
-    }
-  },
-
-  /**
-   * Tạo sản phẩm mới
-   */
-  async createProduct(productData: CreateProductDto): Promise<Product> {
-    try {
-      const response = await axiosInstance.post("/products", productData);
-      return response.data;
-    } catch (error) {
-      console.error("Error creating product:", error);
-      throw error;
-    }
-  },
+class ProductService extends BaseService<Product, CreateProductDto> {
+  constructor() {
+    super("/products");
+  }
 
   /**
    * Cập nhật sản phẩm
@@ -98,19 +55,7 @@ const productService = {
       console.error(`Error updating product with ID ${id}:`, error);
       throw error;
     }
-  },
+  }
+}
 
-  /**
-   * Xóa sản phẩm
-   */
-  async deleteProduct(id: string | number): Promise<void> {
-    try {
-      await axiosInstance.delete(`/products/${id}`);
-    } catch (error) {
-      console.error(`Error deleting product with ID ${id}:`, error);
-      throw error;
-    }
-  },
-};
-
-export default productService;
+export default new ProductService();
