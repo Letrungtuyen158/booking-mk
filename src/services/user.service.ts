@@ -1,7 +1,7 @@
 import { axiosInstance } from "@/utils/axiosInstance";
 
 // Types
-export interface User {
+export interface Customer {
   id: string | number;
   name: string;
   email: string;
@@ -9,82 +9,85 @@ export interface User {
   registeredDate: string;
 }
 
-export interface CreateUserDto {
+export interface CreateCustomerDto {
   name: string;
   email: string;
   phone: string;
   password: string;
 }
 
-const userService = {
+const customerService = {
   /**
-   * Lấy danh sách user
+   * Lấy danh sách customer
    */
-  async getAllUsers(page = 1, limit = 10): Promise<User[]> {
+  async getAllCustomers(page = 1, limit = 10): Promise<Customer[]> {
     try {
-      const response = await axiosInstance.get("/users", {
+      const response = await axiosInstance.get("/customers", {
         params: { page, limit },
       });
       return response.data;
     } catch (error) {
-      console.error("Error fetching users:", error);
+      console.error("Error fetching customers:", error);
       throw error;
     }
   },
 
   /**
-   * Lấy user theo ID
+   * Lấy customer theo ID
    */
-  async getUserById(id: string | number): Promise<User> {
+  async getCustomerById(id: string | number): Promise<Customer> {
     try {
-      const response = await axiosInstance.get(`/users/${id}`);
+      const response = await axiosInstance.get(`/customers/${id}`);
       return response.data;
     } catch (error) {
-      console.error(`Error fetching user with ID ${id}:`, error);
+      console.error(`Error fetching customer with ID ${id}:`, error);
       throw error;
     }
   },
 
   /**
-   * Tạo user mới
+   * Tạo customer mới
    */
-  async createUser(userData: CreateUserDto): Promise<User> {
+  async createCustomer(customerData: CreateCustomerDto): Promise<Customer> {
     try {
-      const response = await axiosInstance.post("/users", userData);
+      const response = await axiosInstance.post("/customers", customerData);
       return response.data;
     } catch (error) {
-      console.error("Error creating user:", error);
+      console.error("Error creating customer:", error);
       throw error;
     }
   },
 
   /**
-   * Cập nhật user
+   * Cập nhật customer
    */
-  async updateUser(
+  async updateCustomer(
     id: string | number,
-    userData: Partial<CreateUserDto>,
-  ): Promise<User> {
+    customerData: Partial<CreateCustomerDto>,
+  ): Promise<Customer> {
     try {
-      const response = await axiosInstance.put(`/users/${id}`, userData);
+      const response = await axiosInstance.put(
+        `/customers/${id}`,
+        customerData,
+      );
       return response.data;
     } catch (error) {
-      console.error(`Error updating user with ID ${id}:`, error);
+      console.error(`Error updating customer with ID ${id}:`, error);
       throw error;
     }
   },
 
   /**
-   * Xóa user
+   * Xóa customer
    */
-  async deleteUser(id: string | number): Promise<void> {
+  async deleteCustomer(id: string | number): Promise<void> {
     try {
-      await axiosInstance.delete(`/users/${id}`);
+      await axiosInstance.delete(`/customers/${id}`);
     } catch (error) {
-      console.error(`Error deleting user with ID ${id}:`, error);
+      console.error(`Error deleting customer with ID ${id}:`, error);
       throw error;
     }
   },
 };
 
-export default userService;
+export default customerService;
