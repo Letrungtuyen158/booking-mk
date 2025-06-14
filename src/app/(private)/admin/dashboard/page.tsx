@@ -5,8 +5,16 @@ import UsersTab from "../../components/dashboard/UsersTab";
 import OrdersTab from "../../components/dashboard/OrdersTab";
 import ProductsTab from "../../components/dashboard/ProductsTab";
 import CategoriesTab from "../../components/dashboard/CategoriesTab";
+import PartnersTab from "../../components/dashboard/PartnersTab";
+import BlogsTab from "../../components/dashboard/BlogsTab";
 
-type TabType = "users" | "orders" | "products" | "categories";
+type TabType =
+  | "users"
+  | "orders"
+  | "products"
+  | "categories"
+  | "blogs"
+  | "partners";
 
 interface PaginationState {
   page: number;
@@ -193,11 +201,36 @@ const generateMockCategories = (count: number) => {
   return categories;
 };
 
-// Generate mock data
-const mockUsers = generateMockUsers(87);
-const mockOrders = generateMockOrders(123);
-const mockProducts = generateMockProducts(156);
-const mockCategories = generateMockCategories(24);
+const generateMockBlogs = (count: number) => {
+  const blogs = [];
+  for (let i = 1; i <= count; i++) {
+    blogs.push({
+      id: i,
+      title: `Blog số ${i}`,
+      author: `Tác giả ${i}`,
+      createdAt: `2024-06-${String(Math.floor(Math.random() * 30) + 1).padStart(
+        2,
+        "0",
+      )}`,
+      status: Math.random() > 0.2 ? "Công khai" : "Nháp",
+    });
+  }
+  return blogs;
+};
+
+const generateMockPartners = (count: number) => {
+  const partners = [];
+  for (let i = 1; i <= count; i++) {
+    partners.push({
+      id: i,
+      name: `Đối tác ${i}`,
+      contact: `contact${i}@partner.com`,
+      phone: `09${Math.floor(10000000 + Math.random() * 90000000)}`,
+      status: Math.random() > 0.2 ? "Hoạt động" : "Tạm dừng",
+    });
+  }
+  return partners;
+};
 
 export default function AdminDashboard() {
   const [user, setUser] = useState<any>(null);
@@ -210,6 +243,10 @@ export default function AdminDashboard() {
   const [mockCategories, setMockCategories] = useState(() =>
     generateMockCategories(24),
   );
+  const [mockBlogs, setMockBlogs] = useState(() => generateMockBlogs(32));
+  const [mockPartners, setMockPartners] = useState(() =>
+    generateMockPartners(15),
+  );
 
   const [pagination, setPagination] = useState<
     Record<TabType, PaginationState>
@@ -218,6 +255,8 @@ export default function AdminDashboard() {
     orders: { page: 1, limit: 10, total: 123 },
     products: { page: 1, limit: 10, total: 156 },
     categories: { page: 1, limit: 10, total: 24 },
+    blogs: { page: 1, limit: 10, total: 32 },
+    partners: { page: 1, limit: 10, total: 15 },
   });
 
   const router = useRouter();
@@ -242,12 +281,16 @@ export default function AdminDashboard() {
       orders: { ...prev.orders, total: mockOrders.length },
       products: { ...prev.products, total: mockProducts.length },
       categories: { ...prev.categories, total: mockCategories.length },
+      blogs: { ...prev.blogs, total: mockBlogs.length },
+      partners: { ...prev.partners, total: mockPartners.length },
     }));
   }, [
     mockUsers.length,
     mockOrders.length,
     mockProducts.length,
     mockCategories.length,
+    mockBlogs.length,
+    mockPartners.length,
   ]);
 
   const handleLogout = () => {
@@ -282,6 +325,10 @@ export default function AdminDashboard() {
     console.log("Added user:", userData);
   };
 
+  const handleDeleteUser = (id: number) => {
+    setMockUsers((prev) => prev.filter((user) => user.id !== id));
+  };
+
   const handleAddOrder = (orderData: any) => {
     setMockOrders((prev) => [orderData, ...prev]);
     console.log("Added order:", orderData);
@@ -292,9 +339,35 @@ export default function AdminDashboard() {
     console.log("Added product:", productData);
   };
 
+  const handleDeleteProduct = (id: number) => {
+    setMockProducts((prev) => prev.filter((product) => product.id !== id));
+  };
+
   const handleAddCategory = (categoryData: any) => {
     setMockCategories((prev) => [categoryData, ...prev]);
     console.log("Added category:", categoryData);
+  };
+
+  const handleDeleteCategory = (id: number) => {
+    setMockCategories((prev) => prev.filter((category) => category.id !== id));
+  };
+
+  const handleAddBlog = (blogData: any) => {
+    setMockBlogs((prev) => [blogData, ...prev]);
+    console.log("Added blog:", blogData);
+  };
+
+  const handleDeleteBlog = (id: number) => {
+    setMockBlogs((prev) => prev.filter((blog) => blog.id !== id));
+  };
+
+  const handleAddPartner = (partnerData: any) => {
+    setMockPartners((prev) => [partnerData, ...prev]);
+    console.log("Added partner:", partnerData);
+  };
+
+  const handleDeletePartner = (id: number) => {
+    setMockPartners((prev) => prev.filter((partner) => partner.id !== id));
   };
 
   if (!user) {
@@ -310,6 +383,8 @@ export default function AdminDashboard() {
     { id: "orders", name: "Quản lí Order", icon: "📋" },
     { id: "products", name: "Quản lí Sản phẩm", icon: "🏷️" },
     { id: "categories", name: "Quản lí Category", icon: "📁" },
+    { id: "blogs", name: "Quản lí Blogs", icon: "📝" },
+    { id: "partners", name: "Quản lí Partner", icon: "🤝" },
   ];
 
   const renderTabContent = () => {
@@ -317,6 +392,8 @@ export default function AdminDashboard() {
     const ordersPagination = pagination.orders;
     const productsPagination = pagination.products;
     const categoriesPagination = pagination.categories;
+    const blogsPagination = pagination.blogs;
+    const partnersPagination = pagination.partners;
 
     switch (activeTab) {
       case "users":
@@ -329,6 +406,7 @@ export default function AdminDashboard() {
             onPageChange={(page) => handlePageChange("users", page)}
             onLimitChange={(limit) => handleLimitChange("users", limit)}
             onAddUser={handleAddUser}
+            onDeleteUser={handleDeleteUser}
           />
         );
       case "orders":
@@ -353,6 +431,7 @@ export default function AdminDashboard() {
             onPageChange={(page) => handlePageChange("products", page)}
             onLimitChange={(limit) => handleLimitChange("products", limit)}
             onAddProduct={handleAddProduct}
+            onDeleteProduct={handleDeleteProduct}
           />
         );
       case "categories":
@@ -365,6 +444,33 @@ export default function AdminDashboard() {
             onPageChange={(page) => handlePageChange("categories", page)}
             onLimitChange={(limit) => handleLimitChange("categories", limit)}
             onAddCategory={handleAddCategory}
+            onDeleteCategory={handleDeleteCategory}
+          />
+        );
+      case "blogs":
+        return (
+          <BlogsTab
+            blogs={getPaginatedData(mockBlogs, "blogs")}
+            page={blogsPagination.page}
+            limit={blogsPagination.limit}
+            total={blogsPagination.total}
+            onPageChange={(page) => handlePageChange("blogs", page)}
+            onLimitChange={(limit) => handleLimitChange("blogs", limit)}
+            onAddBlog={handleAddBlog}
+            onDeleteBlog={handleDeleteBlog}
+          />
+        );
+      case "partners":
+        return (
+          <PartnersTab
+            partners={getPaginatedData(mockPartners, "partners")}
+            page={partnersPagination.page}
+            limit={partnersPagination.limit}
+            total={partnersPagination.total}
+            onPageChange={(page) => handlePageChange("partners", page)}
+            onLimitChange={(limit) => handleLimitChange("partners", limit)}
+            onAddPartner={handleAddPartner}
+            onDeletePartner={handleDeletePartner}
           />
         );
       default:

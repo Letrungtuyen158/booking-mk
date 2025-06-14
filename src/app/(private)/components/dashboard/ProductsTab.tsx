@@ -22,6 +22,7 @@ interface ProductsTabProps {
   onPageChange: (page: number) => void;
   onLimitChange: (limit: number) => void;
   onAddProduct: (productData: any) => void;
+  onDeleteProduct: (id: number) => void;
 }
 
 export default function ProductsTab({
@@ -32,8 +33,10 @@ export default function ProductsTab({
   onPageChange,
   onLimitChange,
   onAddProduct,
+  onDeleteProduct,
 }: ProductsTabProps) {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [selectedMedia, setSelectedMedia] = useState<{
     type: "image" | "video";
     url: string;
@@ -45,6 +48,33 @@ export default function ProductsTab({
 
   const closeMediaPreview = () => {
     setSelectedMedia(null);
+  };
+
+  const handleEdit = (product: Product) => {
+    setEditingProduct(product);
+    setIsAddModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsAddModalOpen(false);
+    setEditingProduct(null);
+  };
+
+  const handleSave = (productData: any) => {
+    if (editingProduct) {
+      // Sửa product
+      onAddProduct({ ...editingProduct, ...productData });
+    } else {
+      // Thêm mới
+      onAddProduct(productData);
+    }
+    handleCloseModal();
+  };
+
+  const handleDelete = (id: number) => {
+    if (window.confirm("Bạn có chắc chắn muốn xóa?")) {
+      onDeleteProduct(id);
+    }
   };
 
   return (
@@ -202,10 +232,16 @@ export default function ProductsTab({
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <button className="text-indigo-600 hover:text-indigo-900 mr-4">
+                      <button
+                        className="text-indigo-600 hover:text-indigo-900 mr-4"
+                        onClick={() => handleEdit(product)}
+                      >
                         Sửa
                       </button>
-                      <button className="text-red-600 hover:text-red-900">
+                      <button
+                        className="text-red-600 hover:text-red-900"
+                        onClick={() => handleDelete(product.id)}
+                      >
                         Xóa
                       </button>
                     </td>
@@ -267,8 +303,9 @@ export default function ProductsTab({
 
       <AddProductModal
         isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
-        onSave={onAddProduct}
+        onClose={handleCloseModal}
+        onSave={handleSave}
+        initialData={editingProduct}
       />
     </>
   );

@@ -19,6 +19,7 @@ interface UsersTabProps {
   onPageChange: (page: number) => void;
   onLimitChange: (limit: number) => void;
   onAddUser: (userData: any) => void;
+  onDeleteUser: (id: number) => void;
 }
 
 export default function UsersTab({
@@ -29,8 +30,35 @@ export default function UsersTab({
   onPageChange,
   onLimitChange,
   onAddUser,
+  onDeleteUser,
 }: UsersTabProps) {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [editingUser, setEditingUser] = useState<User | null>(null);
+
+  const handleEdit = (user: User) => {
+    setEditingUser(user);
+    setIsAddModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsAddModalOpen(false);
+    setEditingUser(null);
+  };
+
+  const handleSave = (userData: any) => {
+    if (editingUser) {
+      onAddUser({ ...editingUser, ...userData });
+    } else {
+      onAddUser(userData);
+    }
+    handleCloseModal();
+  };
+
+  const handleDelete = (id: number) => {
+    if (window.confirm("Bạn có chắc chắn muốn xóa?")) {
+      onDeleteUser(id);
+    }
+  };
 
   return (
     <>
@@ -90,10 +118,16 @@ export default function UsersTab({
                       {user.registeredDate}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <button className="text-indigo-600 hover:text-indigo-900 mr-4">
+                      <button
+                        className="text-indigo-600 hover:text-indigo-900 mr-4"
+                        onClick={() => handleEdit(user)}
+                      >
                         Sửa
                       </button>
-                      <button className="text-red-600 hover:text-red-900">
+                      <button
+                        className="text-red-600 hover:text-red-900"
+                        onClick={() => handleDelete(user.id)}
+                      >
                         Xóa
                       </button>
                     </td>
@@ -114,8 +148,9 @@ export default function UsersTab({
 
       <AddUserModal
         isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
-        onSave={onAddUser}
+        onClose={handleCloseModal}
+        onSave={handleSave}
+        initialData={editingUser}
       />
     </>
   );

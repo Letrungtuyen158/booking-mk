@@ -19,6 +19,7 @@ interface CategoriesTabProps {
   onPageChange: (page: number) => void;
   onLimitChange: (limit: number) => void;
   onAddCategory: (categoryData: any) => void;
+  onDeleteCategory: (id: number) => void;
 }
 
 export default function CategoriesTab({
@@ -29,8 +30,35 @@ export default function CategoriesTab({
   onPageChange,
   onLimitChange,
   onAddCategory,
+  onDeleteCategory,
 }: CategoriesTabProps) {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+
+  const handleEdit = (category: Category) => {
+    setEditingCategory(category);
+    setIsAddModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsAddModalOpen(false);
+    setEditingCategory(null);
+  };
+
+  const handleSave = (categoryData: any) => {
+    if (editingCategory) {
+      onAddCategory({ ...editingCategory, ...categoryData });
+    } else {
+      onAddCategory(categoryData);
+    }
+    handleCloseModal();
+  };
+
+  const handleDelete = (id: number) => {
+    if (window.confirm("Bạn có chắc chắn muốn xóa?")) {
+      onDeleteCategory(id);
+    }
+  };
 
   return (
     <>
@@ -98,10 +126,16 @@ export default function CategoriesTab({
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <button className="text-indigo-600 hover:text-indigo-900 mr-4">
+                      <button
+                        className="text-indigo-600 hover:text-indigo-900 mr-4"
+                        onClick={() => handleEdit(category)}
+                      >
                         Sửa
                       </button>
-                      <button className="text-red-600 hover:text-red-900">
+                      <button
+                        className="text-red-600 hover:text-red-900"
+                        onClick={() => handleDelete(category.id)}
+                      >
                         Xóa
                       </button>
                     </td>
@@ -122,8 +156,9 @@ export default function CategoriesTab({
 
       <AddCategoryModal
         isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
-        onSave={onAddCategory}
+        onClose={handleCloseModal}
+        onSave={handleSave}
+        initialData={editingCategory}
       />
     </>
   );

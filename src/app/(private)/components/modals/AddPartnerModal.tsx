@@ -1,48 +1,47 @@
 "use client";
 import { useState, useEffect } from "react";
 
-interface AddCategoryModalProps {
+interface AddPartnerModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (categoryData: any) => void;
+  onSave: (partnerData: any) => void;
   initialData?: any;
 }
 
-export default function AddCategoryModal({
+export default function AddPartnerModal({
   isOpen,
   onClose,
   onSave,
   initialData,
-}: AddCategoryModalProps) {
+}: AddPartnerModalProps) {
   const [formData, setFormData] = useState({
     name: initialData?.name || "",
-    description: initialData?.description || "",
+    contact: initialData?.contact || "",
+    phone: initialData?.phone || "",
     status: initialData?.status || "Hoạt động",
   });
   const [isLoading, setIsLoading] = useState(false);
-
-  const statuses = ["Hoạt động", "Tạm dừng"];
 
   useEffect(() => {
     if (initialData) {
       setFormData({
         name: initialData.name || "",
-        description: initialData.description || "",
+        contact: initialData.contact || "",
+        phone: initialData.phone || "",
         status: initialData.status || "Hoạt động",
       });
     } else {
       setFormData({
         name: "",
-        description: "",
+        contact: "",
+        phone: "",
         status: "Hoạt động",
       });
     }
   }, [initialData, isOpen]);
 
   const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >,
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     setFormData({
       ...formData,
@@ -53,25 +52,16 @@ export default function AddCategoryModal({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-
     try {
-      // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
       onSave({
         ...formData,
         id: Date.now(),
-        productCount: 0,
       });
-
-      // Reset form
-      setFormData({
-        name: "",
-        description: "",
-        status: "Hoạt động",
-      });
+      setFormData({ name: "", contact: "", phone: "", status: "Hoạt động" });
       onClose();
     } catch (error) {
-      console.error("Error saving category:", error);
+      console.error("Error saving partner:", error);
     } finally {
       setIsLoading(false);
     }
@@ -91,7 +81,7 @@ export default function AddCategoryModal({
         <div className="mt-3">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-medium text-gray-900">
-              Thêm Category Mới
+              Thêm Đối tác Mới
             </h3>
             <button
               onClick={onClose}
@@ -112,11 +102,10 @@ export default function AddCategoryModal({
               </svg>
             </button>
           </div>
-
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Tên dịch vụ *
+                Tên đối tác *
               </label>
               <input
                 type="text"
@@ -125,25 +114,37 @@ export default function AddCategoryModal({
                 onChange={handleChange}
                 required
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder="Nhập tên dịch vụ"
+                placeholder="Nhập tên đối tác"
               />
             </div>
-
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Mô tả *
+                Email liên hệ *
               </label>
-              <textarea
-                name="description"
-                value={formData.description}
+              <input
+                type="email"
+                name="contact"
+                value={formData.contact}
                 onChange={handleChange}
                 required
-                rows={3}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder="Nhập mô tả dịch vụ"
+                placeholder="Nhập email liên hệ"
               />
             </div>
-
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Số điện thoại *
+              </label>
+              <input
+                type="tel"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                placeholder="Nhập số điện thoại"
+              />
+            </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Trạng thái *
@@ -152,17 +153,12 @@ export default function AddCategoryModal({
                 name="status"
                 value={formData.status}
                 onChange={handleChange}
-                required
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
-                {statuses.map((status) => (
-                  <option key={status} value={status}>
-                    {status}
-                  </option>
-                ))}
+                <option value="Hoạt động">Hoạt động</option>
+                <option value="Tạm dừng">Tạm dừng</option>
               </select>
             </div>
-
             <div className="flex justify-end space-x-3 pt-4">
               <button
                 type="button"

@@ -1,48 +1,50 @@
 "use client";
 import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+import "react-quill/dist/quill.snow.css";
 
-interface AddCategoryModalProps {
+interface AddBlogModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (categoryData: any) => void;
+  onSave: (blogData: any) => void;
   initialData?: any;
 }
 
-export default function AddCategoryModal({
+export default function AddBlogModal({
   isOpen,
   onClose,
   onSave,
   initialData,
-}: AddCategoryModalProps) {
+}: AddBlogModalProps) {
   const [formData, setFormData] = useState({
-    name: initialData?.name || "",
+    title: initialData?.title || "",
+    author: initialData?.author || "",
     description: initialData?.description || "",
-    status: initialData?.status || "Hoạt động",
+    status: initialData?.status || "Công khai",
   });
   const [isLoading, setIsLoading] = useState(false);
-
-  const statuses = ["Hoạt động", "Tạm dừng"];
 
   useEffect(() => {
     if (initialData) {
       setFormData({
-        name: initialData.name || "",
+        title: initialData.title || "",
+        author: initialData.author || "",
         description: initialData.description || "",
-        status: initialData.status || "Hoạt động",
+        status: initialData.status || "Công khai",
       });
     } else {
       setFormData({
-        name: "",
+        title: "",
+        author: "",
         description: "",
-        status: "Hoạt động",
+        status: "Công khai",
       });
     }
   }, [initialData, isOpen]);
 
   const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >,
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     setFormData({
       ...formData,
@@ -53,25 +55,22 @@ export default function AddCategoryModal({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-
     try {
-      // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
       onSave({
         ...formData,
         id: Date.now(),
-        productCount: 0,
+        createdAt: new Date().toISOString().split("T")[0],
       });
-
-      // Reset form
       setFormData({
-        name: "",
+        title: "",
+        author: "",
         description: "",
-        status: "Hoạt động",
+        status: "Công khai",
       });
       onClose();
     } catch (error) {
-      console.error("Error saving category:", error);
+      console.error("Error saving blog:", error);
     } finally {
       setIsLoading(false);
     }
@@ -90,9 +89,7 @@ export default function AddCategoryModal({
       >
         <div className="mt-3">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-medium text-gray-900">
-              Thêm Category Mới
-            </h3>
+            <h3 className="text-lg font-medium text-gray-900">Thêm Blog Mới</h3>
             <button
               onClick={onClose}
               className="text-gray-400 hover:text-gray-600"
@@ -112,38 +109,49 @@ export default function AddCategoryModal({
               </svg>
             </button>
           </div>
-
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Tên dịch vụ *
+                Tiêu đề *
               </label>
               <input
                 type="text"
-                name="name"
-                value={formData.name}
+                name="title"
+                value={formData.title}
                 onChange={handleChange}
                 required
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder="Nhập tên dịch vụ"
+                placeholder="Nhập tiêu đề"
               />
             </div>
-
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Mô tả *
+                Tác giả *
               </label>
-              <textarea
-                name="description"
-                value={formData.description}
+              <input
+                type="text"
+                name="author"
+                value={formData.author}
                 onChange={handleChange}
                 required
-                rows={3}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder="Nhập mô tả dịch vụ"
+                placeholder="Nhập tên tác giả"
               />
             </div>
-
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Mô tả
+              </label>
+              <ReactQuill
+                theme="snow"
+                value={formData.description}
+                onChange={(value) =>
+                  setFormData({ ...formData, description: value })
+                }
+                className="bg-white"
+                placeholder="Nhập mô tả blog"
+              />
+            </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Trạng thái *
@@ -152,17 +160,12 @@ export default function AddCategoryModal({
                 name="status"
                 value={formData.status}
                 onChange={handleChange}
-                required
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
-                {statuses.map((status) => (
-                  <option key={status} value={status}>
-                    {status}
-                  </option>
-                ))}
+                <option value="Công khai">Công khai</option>
+                <option value="Nháp">Nháp</option>
               </select>
             </div>
-
             <div className="flex justify-end space-x-3 pt-4">
               <button
                 type="button"

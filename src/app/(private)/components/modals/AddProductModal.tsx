@@ -1,24 +1,29 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import FileUpload from "../common/FileUpload";
+import dynamic from "next/dynamic";
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+import "react-quill/dist/quill.snow.css";
 
 interface AddProductModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (productData: any) => void;
+  initialData?: any;
 }
 
 export default function AddProductModal({
   isOpen,
   onClose,
   onSave,
+  initialData,
 }: AddProductModalProps) {
   const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    price: "",
-    category: "",
-    status: "Hoạt động",
+    name: initialData?.name || "",
+    description: initialData?.description || "",
+    price: initialData?.price || "",
+    category: initialData?.category || "",
+    status: initialData?.status || "Hoạt động",
   });
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [videoFiles, setVideoFiles] = useState<File[]>([]);
@@ -146,11 +151,37 @@ export default function AddProductModal({
     }
   };
 
+  useEffect(() => {
+    if (initialData) {
+      setFormData({
+        name: initialData.name || "",
+        description: initialData.description || "",
+        price: initialData.price || "",
+        category: initialData.category || "",
+        status: initialData.status || "Hoạt động",
+      });
+    } else {
+      setFormData({
+        name: "",
+        description: "",
+        price: "",
+        category: "",
+        status: "Hoạt động",
+      });
+    }
+  }, [initialData, isOpen]);
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-      <div className="relative top-10 mx-auto p-5 border w-[600px] shadow-lg rounded-md bg-white max-h-[90vh] overflow-y-auto">
+    <div
+      className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50"
+      onClick={onClose}
+    >
+      <div
+        className="relative top-10 mx-auto p-5 border w-[600px] shadow-lg rounded-md bg-white max-h-[90vh] overflow-y-auto"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="mt-3">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-medium text-gray-900">
@@ -196,13 +227,13 @@ export default function AddProductModal({
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Mô tả *
               </label>
-              <textarea
-                name="description"
+              <ReactQuill
+                theme="snow"
                 value={formData.description}
-                onChange={handleChange}
-                required
-                rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                onChange={(value) =>
+                  setFormData({ ...formData, description: value })
+                }
+                className="bg-white"
                 placeholder="Nhập mô tả sản phẩm"
               />
             </div>
@@ -271,7 +302,7 @@ export default function AddProductModal({
                 accept="image/*"
                 multiple={true}
                 onFileSelect={handleImageSelect}
-                type="image"
+                type={1}
               />
 
               {/* Image Previews */}
@@ -304,7 +335,7 @@ export default function AddProductModal({
                 accept="video/*"
                 multiple={true}
                 onFileSelect={handleVideoSelect}
-                type="video"
+                type={2}
               />
 
               {/* Video Previews */}

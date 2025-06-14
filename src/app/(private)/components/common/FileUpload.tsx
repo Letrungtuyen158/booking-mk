@@ -8,7 +8,7 @@ interface FileUploadProps {
   multiple?: boolean;
   onFileSelect: (files: File[]) => void;
   preview?: string;
-  type: "image" | "video";
+  type: 1 | 2; //"image" | "video";
 }
 
 export default function FileUpload({
@@ -62,7 +62,7 @@ export default function FileUpload({
       {/* Preview */}
       {preview && (
         <div className="mb-3">
-          {type === "image" ? (
+          {type === 1 ? (
             <img
               src={preview}
               alt="Preview"
@@ -119,12 +119,12 @@ export default function FileUpload({
               className="text-indigo-600 hover:text-indigo-500 font-medium"
               onClick={onButtonClick}
             >
-              Upload {type === "image" ? "hình ảnh" : "video"}
+              Upload {type === 1 ? "hình ảnh" : "video"}
             </button>
             <p className="text-gray-500">hoặc kéo thả file vào đây</p>
           </div>
           <p className="text-xs text-gray-500 mt-2">
-            {type === "image"
+            {type === 1
               ? "PNG, JPG, GIF up to 10MB"
               : "MP4, MOV, AVI up to 100MB"}
           </p>
